@@ -1,4 +1,6 @@
 use std::boxed::FnBox;
 use TaskScheduler;
 
-pub type Task = Box<FnBox(&TaskScheduler) + Sync + Send>;
+pub trait Task: FnBox(&TaskScheduler) + Sync + Send { }
+impl <T> Task for T
+    where T: FnBox(&TaskScheduler) + Sync + Send { }

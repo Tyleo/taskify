@@ -3,13 +3,12 @@ use deque::{ Stealer, Stolen, Worker };
 use rand::Rng;
 use std::sync::Arc;
 use Task;
-use TaskIntoIterator;
-
-use std::boxed::FnBox;
+use TaskBox;
+use TaskBoxIntoIterator;
 
 pub struct TaskScheduler {
-    worker: Worker<Task>,
-    stealers: Vec<Stealer<Task>>,
+    worker: Worker<TaskBox>,
+    stealers: Vec<Stealer<TaskBox>>,
     rng: Box<Rng>,
 }
 
@@ -18,8 +17,8 @@ fn cyclic_inc(value: usize, max: usize) -> usize {
 }
 
 impl TaskScheduler {
-    pub fn new(worker: Worker<Task>,
-               stealers: Vec<Stealer<Task>>,
+    pub fn new(worker: Worker<TaskBox>,
+               stealers: Vec<Stealer<TaskBox>>,
                rng: Box<Rng>) -> TaskScheduler {
         TaskScheduler { worker: worker,
                         stealers: stealers,
@@ -35,8 +34,8 @@ impl TaskScheduler {
 
     fn try_run_worker(&mut self) -> bool {
         match self.worker.pop() {
-            Some(task) => {
-                task.call_box((&self,));
+            Some(task_box) => {
+                task_box.call_box((&self,));
                 true
             },
             None => {
@@ -68,7 +67,7 @@ impl TaskScheduler {
             has_stolen
     }
 
-    fn try_run_stealer(&self, stealer: &Stealer<Task>) -> bool {
+    fn try_run_stealer(&self, stealer: &Stealer<TaskBox>) -> bool {
         let mut has_any = true;
         let mut has_stolen = false;
 
@@ -87,76 +86,114 @@ impl TaskScheduler {
         has_stolen
     }
 
-    pub fn add_task_0<TFn: 'static + FnBox(&TaskScheduler) + Sync + Send>(&self, task: TFn) {
-        self.worker.push(Box::new(task));
+    pub fn add_task_box(&self, task_box: TaskBox) {
+        self.worker.push(task_box);
     }
 
-    pub fn add_task(&self, task: Task) {
-        self.worker.push(task);
+    pub fn add_task<TTask: 'static + Task>(&self, task: TTask) {
+        let task_box = Box::new(task);
+        self.add_task_box(task_box);
     }
 
-    pub fn add_tasks<TTaskIntoIterator: 'static + TaskIntoIterator>(&self,
-                                                                    tasks: TTaskIntoIterator) {
-        for task in tasks.into_iter() {
-            self.add_task(task);
+    pub fn add_task_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(&self,
+                                                                               task_boxes: TTaskBoxIntoIterator) {
+        for task_box in task_boxes.into_iter() {
+            self.add_task_box(task_box);
         }
     }
 
-    pub fn add_task_with_continuation(&self,
-                                      task: Task,
-                                      continuation: Task) {
-        let complete_task = Box::new(move |task_scheduler: &TaskScheduler| {
-            task.call_box((&task_scheduler,));
-            continuation.call_box((&task_scheduler,));
-        });
+    pub fn add_task_box_with_continuation_box(&self,
+                                              task_box: TaskBox,
+                                              continuation_box: TaskBox) {
+        let complete_task = move |task_scheduler: &TaskScheduler| {
+            task_box.call_box((&task_scheduler,));
+            continuation_box.call_box((&task_scheduler,));
+        };
         self.add_task(complete_task);
     }
 
-    pub fn add_tasks_with_continuation<TTaskIntoIterator: 'static + TaskIntoIterator>(&self,
-                                                                                      tasks: TTaskIntoIterator,
-                                                                                      continuation: Task) {
-        let decaying_continuation = unsafe { DecayPtr::new(continuation) };
+    pub fn add_task_with_continuation<TTask: 'static + Task, 
+                                      TContinuation: 'static  + Task>(&self,
+                                                                      task: TTask,
+                                                                      continuation: TContinuation) {
+        let task_box = Box::new(task);
+        let continuation_box = Box::new(continuation);
+        self.add_task_box_with_continuation_box(task_box, continuation_box);
+    }
 
-        for task in tasks {
-            let sub_decaying_continutation = unsafe { decaying_continuation.clone() };
-            let sub_complete_task = Box::new(move |task_scheduler: &TaskScheduler| {
-                task.call_box((&task_scheduler,));
-                match unsafe { sub_decaying_continutation.decay() } {
-                    Some(continuation) => continuation.call_box((&task_scheduler,)),
+    pub fn add_task_box_with_continuation<TContinuation: 'static  + Task>(&self,
+                                                                          task_box: TaskBox,
+                                                                          continuation: TContinuation) {
+        let continuation_box = Box::new(continuation);
+        self.add_task_box_with_continuation_box(task_box, continuation_box);
+    }
+
+    pub fn add_task_with_continuation_box<TTask: 'static + Task>(&self,
+                                                                 task: TTask,
+                                                                 continuation_box: TaskBox) {
+        let task_box = Box::new(task);
+        self.add_task_box_with_continuation_box(task_box, continuation_box);
+    }
+
+    pub fn add_task_boxes_with_continuation_box<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(&self,
+                                                                                                      task_boxes: TTaskBoxIntoIterator,
+                                                                                                      continuation_box: TaskBox) {
+        let decaying_continuation_box = unsafe { DecayPtr::new(continuation_box) };
+
+        for task_box in task_boxes {
+            let sub_decaying_continutation_box = unsafe { decaying_continuation_box.clone() };
+            let sub_complete_task = move |task_scheduler: &TaskScheduler| {
+                task_box.call_box((&task_scheduler,));
+                match unsafe { sub_decaying_continutation_box.decay() } {
+                    Some(continuation_box) => continuation_box.call_box((&task_scheduler,)),
                     None => { },
                 };
-            });
+            };
             self.add_task(sub_complete_task);
         };
     }
 
-    pub fn add_task_with_continuations<TTaskIntoIterator: 'static + TaskIntoIterator>(&self,
-                                                                                      task: Task,
-                                                                                      continuations: TTaskIntoIterator) {
-        let complete_task = Box::new(move |task_scheduler: &TaskScheduler| {
-            task.call_box((&task_scheduler,));
-            task_scheduler.add_tasks(continuations);
-        });
+    pub fn add_task_boxes_with_continuation<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator,
+                                            TContinuation: 'static  + Task>(&self,
+                                                                            task_boxes: TTaskBoxIntoIterator,
+                                                                            continuation: TContinuation) {
+        let continuation_box = Box::new(continuation);
+        self.add_task_boxes_with_continuation_box(task_boxes, continuation_box);
+    }
+
+    pub fn add_task_box_with_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(&self,
+                                                                                                     task_box: TaskBox,
+                                                                                                     continuation_boxes: TTaskBoxIntoIterator) {
+        let complete_task = move |task_scheduler: &TaskScheduler| {
+            task_box.call_box((&task_scheduler,));
+            task_scheduler.add_task_boxes(continuation_boxes);
+        };
         self.add_task(complete_task);
     }
 
-    pub fn add_tasks_with_continuations<TTaskIntoIterator: 'static + TaskIntoIterator>(&self,
-                                                                                       tasks: TTaskIntoIterator,
-                                                                                       continuations: TTaskIntoIterator) {
-        let decaying_continuations = unsafe { DecayPtr::new(continuations) };
+    pub fn add_task_with_continuation_boxes<TTask: 'static + Task,
+                                            TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(&self,
+                                                                                                 task: TTask,
+                                                                                                 continuation_boxes: TTaskBoxIntoIterator) {
+        let task_box = Box::new(task);
+        self.add_task_box_with_continuation_boxes(task_box, continuation_boxes);
+    }
 
-        for task in tasks {
-            let sub_decaying_continutations = unsafe { decaying_continuations.clone() };
-            let sub_complete_task = Box::new(move |task_scheduler: &TaskScheduler| {
-                task.call_box((&task_scheduler,));
-                match unsafe { sub_decaying_continutations.decay() } {
-                    Some(continuations) => task_scheduler.add_tasks(continuations),
+    pub fn add_task_boxes_with_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(&self,
+                                                                                                       task_boxes: TTaskBoxIntoIterator,
+                                                                                                       continuation_boxes: TTaskBoxIntoIterator) {
+        let decaying_continuation_boxes = unsafe { DecayPtr::new(continuation_boxes) };
+
+        for task_box in task_boxes {
+            let sub_decaying_continutation_boxes = unsafe { decaying_continuation_boxes.clone() };
+            let sub_complete_task = move |task_scheduler: &TaskScheduler| {
+                task_box.call_box((&task_scheduler,));
+                match unsafe { sub_decaying_continutation_boxes.decay() } {
+                    Some(continuation_boxes) => task_scheduler.add_task_boxes(continuation_boxes),
                     None => { },
                 };
-            });
+            };
             self.add_task(sub_complete_task);
         };
     }
 }
-
-unsafe impl Send for TaskScheduler { }

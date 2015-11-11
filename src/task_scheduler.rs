@@ -1,5 +1,5 @@
 use DecayPtr;
-use deque::{ Stealer, Stolen, Worker };
+use deque::{ BufferPool, Stealer, Stolen, Worker };
 use rand::Rng;
 use std::sync::Arc;
 use Task;
@@ -9,7 +9,7 @@ use TaskBoxIntoIterator;
 pub struct TaskScheduler {
     worker: Worker<TaskBox>,
     stealers: Vec<Stealer<TaskBox>>,
-    rng: Box<Rng>,
+    rng: Box<Rng + Send>,
 }
 
 fn cyclic_inc(value: usize, max: usize) -> usize {
@@ -19,10 +19,58 @@ fn cyclic_inc(value: usize, max: usize) -> usize {
 impl TaskScheduler {
     pub fn new(worker: Worker<TaskBox>,
                stealers: Vec<Stealer<TaskBox>>,
-               rng: Box<Rng>) -> TaskScheduler {
+               rng: Box<Rng + Send>) -> TaskScheduler {
         TaskScheduler { worker: worker,
                         stealers: stealers,
                         rng: rng, }
+    }
+
+    pub fn new_batch(number_of_task_schedulers: usize,
+                     rngs: Vec<Box<Rng + Send>>) -> Option<Vec<TaskScheduler>> {
+        let mut worker_vector = Vec::<Worker<TaskBox>>::with_capacity(number_of_task_schedulers);
+        let mut stealer_vector = Vec::<Stealer<TaskBox>>::with_capacity(number_of_task_schedulers);
+
+        let buffer_pool = BufferPool::<TaskBox>::new();
+        for i in 0..number_of_task_schedulers {
+            let (worker, stealer) = buffer_pool.deque();
+            worker_vector.push(worker);
+            stealer_vector.push(stealer);
+        };
+
+        let mut task_schedulers = Vec::<TaskScheduler>::with_capacity(number_of_task_schedulers);
+        let mut rngs_mut = rngs;
+
+        for worker_index in (0..worker_vector.len()).rev() {
+            let worker = match worker_vector.pop() {
+                Some(result) => { result },
+                None => return None,
+            };
+
+            let mut stealers = Vec::<Stealer<TaskBox>>::with_capacity(number_of_task_schedulers);
+
+            for stealer_index in 0..stealer_vector.len() {
+                if worker_index == stealer_index {
+                    continue;
+                }
+
+                let stealer = match stealer_vector.get(stealer_index as usize) {
+                    Some(result) => result.clone(),
+                    None => return None,
+                };
+
+                stealers.push(stealer);
+            };
+
+            let rng = match rngs_mut.pop() {
+                Some(result) => { result },
+                None => return None,
+            };
+
+            let task_scheduler = TaskScheduler::new(worker, stealers, rng);
+            task_schedulers.push(task_scheduler);
+        };
+
+        Some(task_schedulers)
     }
 
     pub fn run(&mut self) {

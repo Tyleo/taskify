@@ -54,10 +54,13 @@ fn it_works() {
     join_handles.reserve(num_threads);
 
     for scheduler in &schedulers {
-        for i in 0..100000 {
-            // scheduler.add_task_0(move |task_scheduler: &TaskScheduler| {
-
-            // });
+        for i in 0..5000000 {
+            scheduler.add_task(move |task_scheduler: &TaskScheduler| {
+                    for i in 0..100
+                    {
+                        let x = i;
+                    }
+            });
         }
     }
 

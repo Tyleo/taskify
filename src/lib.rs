@@ -29,8 +29,13 @@ pub use task_box_into_iterator::TaskBoxIntoIterator;
 use rand::Rng;
 use rand::StdRng;
 
+use std::sync::Arc;
+use std::sync::atomic::AtomicUsize;
+use std::sync::atomic::Ordering;
+
 use std::thread;
 use std::thread::JoinHandle;
+
 
 #[test]
 fn it_works() {
@@ -50,19 +55,21 @@ fn it_works() {
         None => panic!(),
     };
 
-    let mut join_handles = Vec::<JoinHandle<()>>::new();
-    join_handles.reserve(num_threads);
-
+    let shared = Arc::new(AtomicUsize::new(0));
     for scheduler in &schedulers {
         for i in 0..5000000 {
+            let mine = shared.clone();
             scheduler.add_task(move |task_scheduler: &TaskScheduler| {
-                    for i in 0..100
-                    {
-                        let x = i;
-                    }
+                let value = mine.fetch_add(1, Ordering::Relaxed);
+                for i in 0..100 {
+                    let x = i;
+                }
             });
         }
     }
+
+    let mut join_handles = Vec::<JoinHandle<()>>::new();
+    join_handles.reserve(num_threads);
 
     for mut scheduler in schedulers {
         let join_handle = thread::spawn(move || {
@@ -75,4 +82,7 @@ fn it_works() {
     for join_handle in join_handles {
         join_handle.join();
     }
+
+    let shared_as_usize: usize = shared.load(Ordering::Relaxed);
+    println!("{0}", shared_as_usize);
 }

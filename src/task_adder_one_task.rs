@@ -29,8 +29,10 @@ impl <'a> TaskAdderOneTask<'a> {
 
     fn convert_to_task_adder_multiple_tasks(self,
                                             task_boxes: Vec<TaskBox>) -> TaskAdderMultipleTasks<'a> {
+        let mut task_boxes_mut = task_boxes;
+        task_boxes_mut.push(self.task_box);
         TaskAdderMultipleTasks::new(self.scheduler,
-                                    task_boxes)
+                                    task_boxes_mut)
     }
 
     fn convert_to_continuation_adder_one_task_multiple_continuations(self) -> ContinuationAdderOneTaskMultipleContinuations<'a> {

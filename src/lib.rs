@@ -24,6 +24,9 @@ pub use continuation_adder_one_task_one_continuation::ContinuationAdderOneTaskOn
 mod continuation_adder_trait;
 pub use continuation_adder_trait::ContinuationAdderTrait;
 
+mod decay_ptr;
+pub use decay_ptr::DecayPtr;
+
 mod schedule_multiple_tasks_multiple_continuations;
 pub use schedule_multiple_tasks_multiple_continuations::ScheduleMultipleTasksMultipleContinuations;
 
@@ -51,6 +54,9 @@ pub use loose_continuation::LooseContinuation;
 mod loose_continuation_into_iterator;
 pub use loose_continuation_into_iterator::LooseContinuationIntoIterator;
 
+mod scheduler;
+pub use scheduler::Scheduler;
+
 mod task;
 pub use task::Task;
 
@@ -71,25 +77,6 @@ pub use task_box::TaskBox;
 
 mod task_box_into_iterator;
 pub use task_box_into_iterator::TaskBoxIntoIterator;
-
-mod task_scheduler_1;
-pub use task_scheduler_1::TaskScheduler1;
-
-
-
-
-
-mod decay_ptr;
-pub use decay_ptr::DecayPtr;
-
-mod task_scheduler;
-pub use task_scheduler::TaskScheduler;
-
-
-
-
-
-
 
 // Begin test area
 

@@ -4,7 +4,8 @@ use TaskAdderHasTasksTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
 
-pub trait TaskAdderHasNoTasksTrait<TContinuationAdderMultipleTasksMultipleContinuations,
+pub trait TaskAdderHasNoTasksTrait<'a,
+                                   TContinuationAdderMultipleTasksMultipleContinuations,
                                    TContinuationAdderMultipleTasksOneContinuation,
                                    TContinuationAdderOneTaskMultipleContinuations,
                                    TContinuationAdderOneTaskOneContinuation,
@@ -28,9 +29,9 @@ pub trait TaskAdderHasNoTasksTrait<TContinuationAdderMultipleTasksMultipleContin
                                                         TContinuationAdderOneTaskMultipleContinuations,
                                                         TContinuationAdderOneTaskOneContinuation,
                                                         TTaskAdderMultipleTasks> {
-    fn add_task<TTask: 'static + Task>(&self, task: TTask) -> TTaskAdderOneTask;
+    fn add_task<TTask: 'static + Task>(&'a self, task: TTask) -> TTaskAdderOneTask;
 
-    fn add_task_box(&self, task_box: TaskBox) -> TTaskAdderOneTask;
+    fn add_task_box(&'a self, task_box: TaskBox) -> TTaskAdderOneTask;
 
-    fn add_task_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(&self, task_boxes: TTaskBoxIntoIterator) -> TTaskAdderMultipleTasks;
+    fn add_task_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(&'a self, task_boxes: TTaskBoxIntoIterator) -> TTaskAdderMultipleTasks;
 }

@@ -1,3 +1,4 @@
+use Scheduler;
 use ScheduleTrait;
 
 pub struct ScheduleOneTaskNoContinuations;

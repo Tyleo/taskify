@@ -5,14 +5,21 @@ use ScheduleMultipleTasksNoContinuations;
 use ScheduleTrait;
 use LooseContinuation;
 use LooseContinuationIntoIterator;
+use Scheduler;
 use Task;
 use TaskAdderHasTasksTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
 
-pub struct TaskAdderMultipleTasks;
+pub struct TaskAdderMultipleTasks<'a> {
+    scheduler: &'a Scheduler,
+}
 
-impl TaskAdderMultipleTasks {
+impl <'a> TaskAdderMultipleTasks<'a> {
+    pub fn new(scheduler: &'a Scheduler) -> TaskAdderMultipleTasks<'a>  {
+        TaskAdderMultipleTasks { scheduler: scheduler }
+    }
+
     fn convert_to_continuation_adder_multiple_tasks_multiple_continuations(self) -> ContinuationAdderMultipleTasksMultipleContinuations {
         ContinuationAdderMultipleTasksMultipleContinuations
     }
@@ -26,26 +33,26 @@ impl TaskAdderMultipleTasks {
     }
 }
 
-impl TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuations,
-                            ContinuationAdderMultipleTasksOneContinuation,
-                            ContinuationAdderMultipleTasksMultipleContinuations,
-                            ContinuationAdderMultipleTasksOneContinuation,
-                            TaskAdderMultipleTasks> for TaskAdderMultipleTasks {
-    fn add_task<TTask: 'static + Task>(self, task: TTask) -> TaskAdderMultipleTasks {
+impl <'a> TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuations,
+                                 ContinuationAdderMultipleTasksOneContinuation,
+                                 ContinuationAdderMultipleTasksMultipleContinuations,
+                                 ContinuationAdderMultipleTasksOneContinuation,
+                                 TaskAdderMultipleTasks<'a>> for TaskAdderMultipleTasks<'a> {
+    fn add_task<TTask: 'static + Task>(self, task: TTask) -> TaskAdderMultipleTasks<'a> {
         self
     }
 
-    fn add_task_box(self, task_box: TaskBox) -> TaskAdderMultipleTasks {
+    fn add_task_box(self, task_box: TaskBox) -> TaskAdderMultipleTasks<'a> {
         self
     }
 
-    fn add_task_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks {
+    fn add_task_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a> {
         self
     }
 }
 
-impl ContinuationAdderTrait<ContinuationAdderMultipleTasksMultipleContinuations,
-                            ContinuationAdderMultipleTasksOneContinuation> for TaskAdderMultipleTasks {
+impl <'a> ContinuationAdderTrait<ContinuationAdderMultipleTasksMultipleContinuations,
+                                 ContinuationAdderMultipleTasksOneContinuation> for TaskAdderMultipleTasks<'a> {
     fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdderMultipleTasksOneContinuation {
         self.convert_to_continuation_adder_multiple_tasks_one_continuation()
     }
@@ -69,7 +76,7 @@ impl ContinuationAdderTrait<ContinuationAdderMultipleTasksMultipleContinuations,
     }
 }
 
-impl ScheduleTrait for TaskAdderMultipleTasks {
+impl <'a> ScheduleTrait for TaskAdderMultipleTasks<'a> {
     fn schedule(self) {
         self.convert_to_schedule_multiple_tasks_no_continuations()
             .schedule();

@@ -11,15 +11,24 @@ use TaskBoxIntoIterator;
 
 pub struct ContinuationAdderMultipleTasksOneContinuation<'a> {
     scheduler: &'a Scheduler,
+    task_boxes: Vec<TaskBox>,
+    continuation_box: TaskBox,
 }
 
 impl <'a> ContinuationAdderMultipleTasksOneContinuation<'a> {
-    pub fn new(scheduler: &'a Scheduler) -> ContinuationAdderMultipleTasksOneContinuation<'a>  {
-        ContinuationAdderMultipleTasksOneContinuation { scheduler: scheduler }
+    pub fn new(scheduler: &'a Scheduler,
+               task_boxes: Vec<TaskBox>,
+               continuation_box: TaskBox) -> ContinuationAdderMultipleTasksOneContinuation<'a>  {
+        ContinuationAdderMultipleTasksOneContinuation { scheduler: scheduler,
+                                                        task_boxes: task_boxes,
+                                                        continuation_box: continuation_box }
     }
 
     fn convert_to_continuation_adder_multiple_tasks_multiple_continuations(self) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
-        ContinuationAdderMultipleTasksMultipleContinuations::new(self.scheduler)
+        let continuation_boxes = vec![self.continuation_box];
+        ContinuationAdderMultipleTasksMultipleContinuations::new(self.scheduler,
+                                                                 self.task_boxes,
+                                                                 continuation_boxes)
     }
 
     fn convert_to_schedule(self) -> ScheduleMultipleTasksOneContinuation<'a> {
@@ -30,8 +39,8 @@ impl <'a> ContinuationAdderMultipleTasksOneContinuation<'a> {
 impl <'a> ContinuationAdderTrait<ContinuationAdderMultipleTasksMultipleContinuations<'a>,
                                  ContinuationAdderMultipleTasksMultipleContinuations<'a>> for ContinuationAdderMultipleTasksOneContinuation<'a> {
     fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
-        self.convert_to_continuation_adder_multiple_tasks_multiple_continuations()
-            .add_continuation(continuation)
+        let continuation_box = Box::new(continuation);
+        self.add_continuation_box(continuation_box)
     }
 
     fn add_continuation_box(self, continuation_box: TaskBox) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
@@ -44,15 +53,15 @@ impl <'a> ContinuationAdderTrait<ContinuationAdderMultipleTasksMultipleContinuat
             .add_continuation_boxes(continuation_boxes)
     }
 
-    fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
-        self.convert_to_continuation_adder_multiple_tasks_multiple_continuations()
-            .add_loose_continuation(loose_continuation)
-    }
+    // fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
+    //     self.convert_to_continuation_adder_multiple_tasks_multiple_continuations()
+    //         .add_loose_continuation(loose_continuation)
+    // }
 
-    fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
-        self.convert_to_continuation_adder_multiple_tasks_multiple_continuations()
-            .add_loose_continuations(loose_continuations)
-    }
+    // fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
+    //     self.convert_to_continuation_adder_multiple_tasks_multiple_continuations()
+    //         .add_loose_continuations(loose_continuations)
+    // }
 }
 
 impl <'a> ScheduleTrait for ContinuationAdderMultipleTasksOneContinuation<'a> {

@@ -15,7 +15,7 @@ pub trait ContinuationAdderTrait<TContinuationAdderMultipleContinuations,
 
     fn add_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, continuation_boxes: TTaskBoxIntoIterator) -> TContinuationAdderMultipleContinuations;
 
-    fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> TContinuationAdderOneContinuation;
+    // fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> TContinuationAdderOneContinuation;
 
-    fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> TContinuationAdderMultipleContinuations;
+    // fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> TContinuationAdderMultipleContinuations;
 }

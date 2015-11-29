@@ -10,11 +10,17 @@ use TaskBoxIntoIterator;
 
 pub struct ContinuationAdderOneTaskMultipleContinuations<'a> {
     scheduler: &'a Scheduler,
+    task_box: TaskBox,
+    continuation_boxes: Vec<TaskBox>,
 }
 
 impl <'a> ContinuationAdderOneTaskMultipleContinuations<'a> {
-    pub fn new(scheduler: &'a Scheduler) -> ContinuationAdderOneTaskMultipleContinuations<'a>  {
-        ContinuationAdderOneTaskMultipleContinuations { scheduler: scheduler }
+    pub fn new(scheduler: &'a Scheduler,
+               task_box: TaskBox,
+               continuation_boxes: Vec<TaskBox>) -> ContinuationAdderOneTaskMultipleContinuations<'a>  {
+        ContinuationAdderOneTaskMultipleContinuations { scheduler: scheduler,
+                                                        task_box: task_box,
+                                                        continuation_boxes: continuation_boxes }
     }
 
     fn convert_to_schedule(self) -> ScheduleOneTaskMultipleContinuations<'a> {
@@ -25,24 +31,31 @@ impl <'a> ContinuationAdderOneTaskMultipleContinuations<'a> {
 impl <'a> ContinuationAdderTrait<ContinuationAdderOneTaskMultipleContinuations<'a>,
                                  ContinuationAdderOneTaskMultipleContinuations<'a>> for ContinuationAdderOneTaskMultipleContinuations<'a> {
     fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
-        self
+        let continuation_box = Box::new(continuation);
+        self.add_continuation_box(continuation_box)
     }
 
     fn add_continuation_box(self, continuation_box: TaskBox) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
-        self
+        let mut mut_self = self;
+        mut_self.continuation_boxes.push(continuation_box);
+        mut_self
     }
 
     fn add_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
-        self
+        let mut mut_self = self;
+        for continuation_box in continuation_boxes {
+            mut_self.continuation_boxes.push(continuation_box);
+        }
+        mut_self
     }
 
-    fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
-        self
-    }
+    // fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
+    //     self
+    // }
 
-    fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
-        self
-    }
+    // fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
+    //     self
+    // }
 }
 
 impl <'a> ScheduleTrait for ContinuationAdderOneTaskMultipleContinuations<'a> {

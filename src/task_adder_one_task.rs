@@ -16,15 +16,22 @@ use TaskBoxIntoIterator;
 
 pub struct TaskAdderOneTask<'a> {
     scheduler: &'a Scheduler,
+    task_box: TaskBox,
 }
 
 impl <'a> TaskAdderOneTask<'a> {
-    pub fn new(scheduler: &'a Scheduler) -> TaskAdderOneTask<'a> {
-        TaskAdderOneTask { scheduler: scheduler }
+    pub fn new(scheduler: &'a Scheduler,
+               task_box: TaskBox) -> TaskAdderOneTask<'a> {
+        TaskAdderOneTask { scheduler: scheduler,
+                           task_box: task_box }
     }
 
-    fn convert_to_task_adder_multiple_tasks(self) -> TaskAdderMultipleTasks<'a> {
-        TaskAdderMultipleTasks::new(self.scheduler)
+    fn convert_to_task_adder_multiple_tasks<TTaskBoxIntoIterator>(self,
+                                                                  task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a>
+        where TTaskBoxIntoIterator: 'static +
+                                    TaskBoxIntoIterator {
+        TaskAdderMultipleTasks::new(self.scheduler,
+                                    task_boxes)
     }
 
     fn convert_to_continuation_adder_one_task_multiple_continuations(self) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
@@ -46,18 +53,17 @@ impl <'a> TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuat
                                  ContinuationAdderOneTaskOneContinuation<'a>,
                                  TaskAdderMultipleTasks<'a>> for TaskAdderOneTask<'a> {
     fn add_task<TTask: 'static + Task>(self, task: TTask) -> TaskAdderMultipleTasks<'a> {
-        self.convert_to_task_adder_multiple_tasks()
-            .add_task(task)
+        let task_box = Box::new(task);
+        self.add_task_box(task_box)
     }
 
     fn add_task_box(self, task_box: TaskBox) -> TaskAdderMultipleTasks<'a> {
-        self.convert_to_task_adder_multiple_tasks()
-            .add_task_box(task_box)
+        let task_boxes = vec![task_box];
+        self.add_task_boxes(task_boxes)
     }
 
     fn add_task_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a> {
-        self.convert_to_task_adder_multiple_tasks()
-            .add_task_boxes(task_boxes)
+        self.convert_to_task_adder_multiple_tasks(task_boxes)
     }
 }
 

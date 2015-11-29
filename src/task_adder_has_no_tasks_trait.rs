@@ -29,9 +29,16 @@ pub trait TaskAdderHasNoTasksTrait<'a,
                                                         TContinuationAdderOneTaskMultipleContinuations,
                                                         TContinuationAdderOneTaskOneContinuation,
                                                         TTaskAdderMultipleTasks> {
-    fn add_task<TTask: 'static + Task>(&'a self, task: TTask) -> TTaskAdderOneTask;
+    fn add_task<TTask>(&'a self,
+                       task: TTask) -> TTaskAdderOneTask
+        where TTask: 'static +
+                     Task;
 
-    fn add_task_box(&'a self, task_box: TaskBox) -> TTaskAdderOneTask;
+    fn add_task_box(&'a self,
+                    task_box: TaskBox) -> TTaskAdderOneTask;
 
-    fn add_task_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(&'a self, task_boxes: TTaskBoxIntoIterator) -> TTaskAdderMultipleTasks;
+    fn add_task_boxes<TTaskBoxIntoIterator>(&'a self,
+                                            task_boxes: TTaskBoxIntoIterator) -> TTaskAdderMultipleTasks
+        where TTaskBoxIntoIterator: 'static +
+                                    TaskBoxIntoIterator;
 }

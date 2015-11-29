@@ -6,6 +6,7 @@ use LooseContinuationIntoIterator;
 use ScheduleMultipleTasksNoContinuations;
 use Scheduler;
 use ScheduleTrait;
+use std::iter::FromIterator;
 use Task;
 use TaskAdderHasTasksTrait;
 use TaskBox;
@@ -13,11 +14,16 @@ use TaskBoxIntoIterator;
 
 pub struct TaskAdderMultipleTasks<'a> {
     scheduler: &'a Scheduler,
+    task_boxes: Vec<TaskBox>,
 }
 
 impl <'a> TaskAdderMultipleTasks<'a> {
-    pub fn new(scheduler: &'a Scheduler) -> TaskAdderMultipleTasks<'a>  {
-        TaskAdderMultipleTasks { scheduler: scheduler }
+    pub fn new<TTaskBoxIntoIterator>(scheduler: &'a Scheduler,
+                                     task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a>
+        where TTaskBoxIntoIterator: 'static +
+                                    TaskBoxIntoIterator {
+        TaskAdderMultipleTasks { scheduler: scheduler,
+                                 task_boxes: Vec::<TaskBox>::from_iter(task_boxes) }
     }
 
     fn convert_to_continuation_adder_multiple_tasks_multiple_continuations(self) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {

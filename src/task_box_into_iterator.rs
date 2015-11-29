@@ -1,5 +1,5 @@
 use TaskBox;
 
-pub trait TaskBoxIntoIterator: IntoIterator<Item = TaskBox> + Sync + Send { }
+pub trait TaskBoxIntoIterator: IntoIterator<Item = TaskBox> + Send { }
 impl <T> TaskBoxIntoIterator for T
-    where T : IntoIterator<Item = TaskBox> + Sync + Send { }
+    where T : IntoIterator<Item = TaskBox> + Send { }

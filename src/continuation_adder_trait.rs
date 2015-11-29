@@ -1,12 +1,10 @@
-use ScheduleTrait;
-use LooseContinuation;
-use LooseContinuationIntoIterator;
+use EndScheduleTrait;
 use Task;
 use TaskBox;
 use TaskBoxIntoIterator;
 
 pub trait ContinuationAdderTrait<TContinuationAdderMultipleContinuations,
-                                 TContinuationAdderOneContinuation>: ScheduleTrait
+                                 TContinuationAdderOneContinuation>: EndScheduleTrait
         where TContinuationAdderMultipleContinuations: ContinuationAdderTrait<TContinuationAdderMultipleContinuations, TContinuationAdderMultipleContinuations>,
               TContinuationAdderOneContinuation: ContinuationAdderTrait<TContinuationAdderMultipleContinuations, TContinuationAdderMultipleContinuations> {
     fn add_continuation<TTask>(self,
@@ -21,8 +19,4 @@ pub trait ContinuationAdderTrait<TContinuationAdderMultipleContinuations,
                                                     continuation_boxes: TTaskBoxIntoIterator) -> TContinuationAdderMultipleContinuations
         where TTaskBoxIntoIterator: 'static +
                                     TaskBoxIntoIterator;
-
-    // fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> TContinuationAdderOneContinuation;
-
-    // fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> TContinuationAdderMultipleContinuations;
 }

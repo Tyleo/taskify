@@ -1,10 +1,8 @@
 use ContinuationAdderOneTaskMultipleContinuations;
 use ContinuationAdderTrait;
-use LooseContinuation;
-use LooseContinuationIntoIterator;
-use ScheduleOneTaskOneContinuation;
+use EndScheduleOneTaskOneContinuation;
 use Scheduler;
-use ScheduleTrait;
+use EndScheduleTrait;
 use Task;
 use TaskBox;
 use TaskBoxIntoIterator;
@@ -30,10 +28,10 @@ impl <'a> ContinuationAdderOneTaskOneContinuation<'a> {
                                                            Vec::new())
     }
 
-    fn convert_to_schedule(self) -> ScheduleOneTaskOneContinuation<'a> {
-        ScheduleOneTaskOneContinuation::new(self.scheduler,
-                                            self.task_box,
-                                            self.continuation_box)
+    fn convert_to_end_schedule_one_task_box_one_continuation_box(self) -> EndScheduleOneTaskOneContinuation<'a> {
+        EndScheduleOneTaskOneContinuation::new(self.scheduler,
+                                               self.task_box,
+                                               self.continuation_box)
     }
 }
 
@@ -61,21 +59,11 @@ impl <'a> ContinuationAdderTrait<ContinuationAdderOneTaskMultipleContinuations<'
         self.convert_to_continuation_adder_one_task_multiple_continuations()
             .add_continuation_boxes(continuation_boxes)
     }
-
-    // fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
-    //     self.convert_to_continuation_adder_one_task_multiple_continuations()
-    //         .add_loose_continuation(loose_continuation)
-    // }
-
-    // fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
-    //     self.convert_to_continuation_adder_one_task_multiple_continuations()
-    //         .add_loose_continuations(loose_continuations)
-    // }
 }
 
-impl <'a> ScheduleTrait for ContinuationAdderOneTaskOneContinuation<'a> {
-    fn schedule(self) {
-        self.convert_to_schedule()
-            .schedule()
+impl <'a> EndScheduleTrait for ContinuationAdderOneTaskOneContinuation<'a> {
+    fn end_schedule(self) {
+        self.convert_to_end_schedule_one_task_box_one_continuation_box()
+            .end_schedule()
     }
 }

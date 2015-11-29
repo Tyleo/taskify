@@ -9,50 +9,44 @@ extern crate alloc;
 extern crate deque;
 extern crate rand;
 
-mod continuation_adder_multiple_tasks_multiple_continuations;
-pub use continuation_adder_multiple_tasks_multiple_continuations::ContinuationAdderMultipleTasksMultipleContinuations;
+mod continuation_adder_multiple_task_boxes_multiple_continuation_boxes;
+pub use continuation_adder_multiple_task_boxes_multiple_continuation_boxes::ContinuationAdderMultipleTasksMultipleContinuations;
 
-mod continuation_adder_multiple_tasks_one_continuation;
-pub use continuation_adder_multiple_tasks_one_continuation::ContinuationAdderMultipleTasksOneContinuation;
+mod continuation_adder_multiple_task_boxes_one_continuation_box;
+pub use continuation_adder_multiple_task_boxes_one_continuation_box::ContinuationAdderMultipleTasksOneContinuation;
 
-mod continuation_adder_one_task_multiple_continuations;
-pub use continuation_adder_one_task_multiple_continuations::ContinuationAdderOneTaskMultipleContinuations;
+mod continuation_adder_one_task_box_multiple_continuation_boxes;
+pub use continuation_adder_one_task_box_multiple_continuation_boxes::ContinuationAdderOneTaskMultipleContinuations;
 
-mod continuation_adder_one_task_one_continuation;
-pub use continuation_adder_one_task_one_continuation::ContinuationAdderOneTaskOneContinuation;
+mod continuation_adder_one_task_box_one_continuation_box;
+pub use continuation_adder_one_task_box_one_continuation_box::ContinuationAdderOneTaskOneContinuation;
 
 mod continuation_adder_trait;
 pub use continuation_adder_trait::ContinuationAdderTrait;
 
+mod end_schedule_multiple_task_boxes_multiple_continuation_boxes;
+pub use end_schedule_multiple_task_boxes_multiple_continuation_boxes::EndScheduleMultipleTasksMultipleContinuations;
+
+mod end_schedule_multiple_task_boxes_no_continuation_boxes;
+pub use end_schedule_multiple_task_boxes_no_continuation_boxes::EndScheduleMultipleTasksNoContinuations;
+
+mod end_schedule_multiple_task_boxes_one_continuation_box;
+pub use end_schedule_multiple_task_boxes_one_continuation_box::EndScheduleMultipleTasksOneContinuation;
+
+mod end_schedule_one_task_box_multiple_continuation_boxes;
+pub use end_schedule_one_task_box_multiple_continuation_boxes::EndScheduleOneTaskMultipleContinuations;
+
+mod end_schedule_one_task_box_no_continuation_boxes;
+pub use end_schedule_one_task_box_no_continuation_boxes::EndScheduleOneTaskNoContinuations;
+
+mod end_schedule_one_task_box_one_continuation_box;
+pub use end_schedule_one_task_box_one_continuation_box::EndScheduleOneTaskOneContinuation;
+
+mod end_schedule_trait;
+pub use end_schedule_trait::EndScheduleTrait;
+
 mod decay_ptr;
 pub use decay_ptr::DecayPtr;
-
-mod schedule_multiple_tasks_multiple_continuations;
-pub use schedule_multiple_tasks_multiple_continuations::ScheduleMultipleTasksMultipleContinuations;
-
-mod schedule_multiple_tasks_no_continuations;
-pub use schedule_multiple_tasks_no_continuations::ScheduleMultipleTasksNoContinuations;
-
-mod schedule_multiple_tasks_one_continuation;
-pub use schedule_multiple_tasks_one_continuation::ScheduleMultipleTasksOneContinuation;
-
-mod schedule_one_task_multiple_continuations;
-pub use schedule_one_task_multiple_continuations::ScheduleOneTaskMultipleContinuations;
-
-mod schedule_one_task_no_continuations;
-pub use schedule_one_task_no_continuations::ScheduleOneTaskNoContinuations;
-
-mod schedule_one_task_one_continuation;
-pub use schedule_one_task_one_continuation::ScheduleOneTaskOneContinuation;
-
-mod schedule_trait;
-pub use schedule_trait::ScheduleTrait;
-
-mod loose_continuation;
-pub use loose_continuation::LooseContinuation;
-
-mod loose_continuation_into_iterator;
-pub use loose_continuation_into_iterator::LooseContinuationIntoIterator;
 
 mod scheduler;
 pub use scheduler::Scheduler;
@@ -63,14 +57,14 @@ pub use task::Task;
 mod task_adder_has_no_tasks_trait;
 pub use task_adder_has_no_tasks_trait::TaskAdderHasNoTasksTrait;
 
-mod task_adder_has_tasks_trait;
-pub use task_adder_has_tasks_trait::TaskAdderHasTasksTrait;
+mod task_adder_multiple_task_boxes;
+pub use task_adder_multiple_task_boxes::TaskAdderMultipleTasks;
 
-mod task_adder_multiple_tasks;
-pub use task_adder_multiple_tasks::TaskAdderMultipleTasks;
+mod task_adder_one_task_box;
+pub use task_adder_one_task_box::TaskAdderOneTask;
 
-mod task_adder_one_task;
-pub use task_adder_one_task::TaskAdderOneTask;
+mod task_adder_trait;
+pub use task_adder_trait::TaskAdderHasTasksTrait;
 
 mod task_box;
 pub use task_box::TaskBox;
@@ -80,15 +74,15 @@ pub use task_box_into_iterator::TaskBoxIntoIterator;
 
 // Begin test area
 
-use rand::Rng;
-use rand::StdRng;
+// use rand::Rng;
+// use rand::StdRng;
 
-use std::sync::Arc;
-use std::sync::atomic::AtomicUsize;
-use std::sync::atomic::Ordering;
+// use std::sync::Arc;
+// use std::sync::atomic::AtomicUsize;
+// use std::sync::atomic::Ordering;
 
-use std::thread;
-use std::thread::JoinHandle;
+// use std::thread;
+// use std::thread::JoinHandle;
 
 
 #[test]

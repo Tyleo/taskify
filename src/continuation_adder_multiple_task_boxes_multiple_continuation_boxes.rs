@@ -1,9 +1,7 @@
 use ContinuationAdderTrait;
-use LooseContinuation;
-use LooseContinuationIntoIterator;
-use ScheduleMultipleTasksMultipleContinuations;
+use EndScheduleMultipleTasksMultipleContinuations;
 use Scheduler;
-use ScheduleTrait;
+use EndScheduleTrait;
 use Task;
 use TaskBox;
 use TaskBoxIntoIterator;
@@ -23,10 +21,10 @@ impl <'a> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
                                                               continuation_boxes: continuation_boxes }
     }
 
-    fn convert_to_schedule(self) -> ScheduleMultipleTasksMultipleContinuations<'a> {
-        ScheduleMultipleTasksMultipleContinuations::new(self.scheduler,
-                                                        self.task_boxes,
-                                                        self.continuation_boxes)
+    fn convert_to_end_schedule_multiple_task_boxes_multiple_continuation_boxes(self) -> EndScheduleMultipleTasksMultipleContinuations<'a> {
+        EndScheduleMultipleTasksMultipleContinuations::new(self.scheduler,
+                                                           self.task_boxes,
+                                                           self.continuation_boxes)
     }
 }
 
@@ -57,19 +55,11 @@ impl <'a> ContinuationAdderTrait<ContinuationAdderMultipleTasksMultipleContinuat
         }
         mut_self
     }
-
-    // fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
-    //     self
-    // }
-
-    // fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
-    //     self
-    // }
 }
 
-impl <'a> ScheduleTrait for ContinuationAdderMultipleTasksMultipleContinuations<'a> {
-    fn schedule(self) {
-        self.convert_to_schedule()
-            .schedule()
+impl <'a> EndScheduleTrait for ContinuationAdderMultipleTasksMultipleContinuations<'a> {
+    fn end_schedule(self) {
+        self.convert_to_end_schedule_multiple_task_boxes_multiple_continuation_boxes()
+            .end_schedule()
     }
 }

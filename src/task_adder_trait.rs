@@ -1,5 +1,5 @@
 use ContinuationAdderTrait;
-use ScheduleTrait;
+use EndScheduleTrait;
 use Task;
 use TaskBox;
 use TaskBoxIntoIterator;
@@ -9,7 +9,7 @@ pub trait TaskAdderHasTasksTrait<TContinuationAdderMultipleTasksMultipleContinua
                                  TContinuationAdderOneTaskMultipleContinuations,
                                  TContinuationAdderOneTaskOneContinuation,
                                  TTaskAdderMultipleTasks>: ContinuationAdderTrait<TContinuationAdderOneTaskMultipleContinuations,
-                                                                                  TContinuationAdderOneTaskOneContinuation> + ScheduleTrait
+                                                                                  TContinuationAdderOneTaskOneContinuation> + EndScheduleTrait
         where TContinuationAdderMultipleTasksMultipleContinuations: ContinuationAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
                                                                                            TContinuationAdderMultipleTasksMultipleContinuations>,
               TContinuationAdderMultipleTasksOneContinuation: ContinuationAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,

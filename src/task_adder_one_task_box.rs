@@ -3,11 +3,9 @@ use ContinuationAdderMultipleTasksOneContinuation;
 use ContinuationAdderOneTaskMultipleContinuations;
 use ContinuationAdderOneTaskOneContinuation;
 use ContinuationAdderTrait;
-use LooseContinuation;
-use LooseContinuationIntoIterator;
-use ScheduleOneTaskNoContinuations;
+use EndScheduleOneTaskNoContinuations;
 use Scheduler;
-use ScheduleTrait;
+use EndScheduleTrait;
 use Task;
 use TaskAdderHasTasksTrait;
 use TaskAdderMultipleTasks;
@@ -45,9 +43,9 @@ impl <'a> TaskAdderOneTask<'a> {
                                                      continuation_box)
     }
 
-    fn convert_to_schedule_one_task_no_continuations(self) -> ScheduleOneTaskNoContinuations<'a> {
-        ScheduleOneTaskNoContinuations::new(self.scheduler,
-                                            self.task_box)
+    fn convert_to_end_schedule_one_task_box_no_continuation_boxes(self) -> EndScheduleOneTaskNoContinuations<'a> {
+        EndScheduleOneTaskNoContinuations::new(self.scheduler,
+                                               self.task_box)
     }
 }
 
@@ -101,20 +99,11 @@ impl <'a> ContinuationAdderTrait<ContinuationAdderOneTaskMultipleContinuations<'
         self.convert_to_continuation_adder_one_task_multiple_continuations()
             .add_continuation_boxes(continuation_boxes)
     }
-
-    // fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> ContinuationAdderOneTaskOneContinuation<'a> {
-    //     self.convert_to_continuation_adder_one_task_one_continuation()
-    // }
-
-    // fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
-    //     self.convert_to_continuation_adder_one_task_multiple_continuations()
-    //         .add_loose_continuations(loose_continuations)
-    // }
 }
 
-impl <'a> ScheduleTrait for TaskAdderOneTask<'a> {
-    fn schedule(self) {
-        self.convert_to_schedule_one_task_no_continuations()
-            .schedule();
+impl <'a> EndScheduleTrait for TaskAdderOneTask<'a> {
+    fn end_schedule(self) {
+        self.convert_to_end_schedule_one_task_box_no_continuation_boxes()
+            .end_schedule();
     }
 }

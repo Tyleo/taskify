@@ -6,7 +6,6 @@ use LooseContinuationIntoIterator;
 use ScheduleMultipleTasksNoContinuations;
 use Scheduler;
 use ScheduleTrait;
-use std::iter::FromIterator;
 use Task;
 use TaskAdderHasTasksTrait;
 use TaskBox;
@@ -18,12 +17,10 @@ pub struct TaskAdderMultipleTasks<'a> {
 }
 
 impl <'a> TaskAdderMultipleTasks<'a> {
-    pub fn new<TTaskBoxIntoIterator>(scheduler: &'a Scheduler,
-                                     task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a>
-        where TTaskBoxIntoIterator: 'static +
-                                    TaskBoxIntoIterator {
+    pub fn new(scheduler: &'a Scheduler,
+               task_boxes: Vec<TaskBox>) -> TaskAdderMultipleTasks<'a> {
         TaskAdderMultipleTasks { scheduler: scheduler,
-                                 task_boxes: Vec::<TaskBox>::from_iter(task_boxes) }
+                                 task_boxes: task_boxes }
     }
 
     fn convert_to_continuation_adder_multiple_tasks_multiple_continuations(self) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
@@ -45,15 +42,22 @@ impl <'a> TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuat
                                  ContinuationAdderMultipleTasksOneContinuation<'a>,
                                  TaskAdderMultipleTasks<'a>> for TaskAdderMultipleTasks<'a> {
     fn add_task<TTask: 'static + Task>(self, task: TTask) -> TaskAdderMultipleTasks<'a> {
-        self
+        let task_box = Box::new(task);
+        self.add_task_box(task_box)
     }
 
     fn add_task_box(self, task_box: TaskBox) -> TaskAdderMultipleTasks<'a> {
-        self
+        let mut mut_self = self;
+        mut_self.task_boxes.push(task_box);
+        mut_self
     }
 
     fn add_task_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a> {
-        self
+        let mut mut_self = self;
+        for task_box in task_boxes {
+            mut_self.task_boxes.push(task_box);
+        }
+        mut_self
     }
 }
 

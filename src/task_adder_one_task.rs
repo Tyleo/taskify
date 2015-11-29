@@ -8,6 +8,7 @@ use LooseContinuationIntoIterator;
 use ScheduleOneTaskNoContinuations;
 use Scheduler;
 use ScheduleTrait;
+use std::iter::FromIterator;
 use Task;
 use TaskAdderHasTasksTrait;
 use TaskAdderMultipleTasks;
@@ -26,10 +27,8 @@ impl <'a> TaskAdderOneTask<'a> {
                            task_box: task_box }
     }
 
-    fn convert_to_task_adder_multiple_tasks<TTaskBoxIntoIterator>(self,
-                                                                  task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a>
-        where TTaskBoxIntoIterator: 'static +
-                                    TaskBoxIntoIterator {
+    fn convert_to_task_adder_multiple_tasks(self,
+                                            task_boxes: Vec<TaskBox>) -> TaskAdderMultipleTasks<'a> {
         TaskAdderMultipleTasks::new(self.scheduler,
                                     task_boxes)
     }
@@ -59,11 +58,12 @@ impl <'a> TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuat
 
     fn add_task_box(self, task_box: TaskBox) -> TaskAdderMultipleTasks<'a> {
         let task_boxes = vec![task_box];
-        self.add_task_boxes(task_boxes)
+        self.convert_to_task_adder_multiple_tasks(task_boxes)
     }
 
     fn add_task_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a> {
-        self.convert_to_task_adder_multiple_tasks(task_boxes)
+        let task_boxes_vec = Vec::from_iter(task_boxes);
+        self.convert_to_task_adder_multiple_tasks(task_boxes_vec)
     }
 }
 

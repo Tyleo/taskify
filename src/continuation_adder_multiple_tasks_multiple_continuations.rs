@@ -10,6 +10,8 @@ use TaskBoxIntoIterator;
 
 pub struct ContinuationAdderMultipleTasksMultipleContinuations<'a> {
     scheduler: &'a Scheduler,
+    //task_boxes: Vec<TaskBox>,
+    //continuations: Vec<TaskBox>,
 }
 
 impl <'a> ContinuationAdderMultipleTasksMultipleContinuations<'a> {

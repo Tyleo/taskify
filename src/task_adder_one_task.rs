@@ -3,11 +3,11 @@ use ContinuationAdderMultipleTasksOneContinuation;
 use ContinuationAdderOneTaskMultipleContinuations;
 use ContinuationAdderOneTaskOneContinuation;
 use ContinuationAdderTrait;
-use ScheduleOneTaskNoContinuations;
-use ScheduleTrait;
 use LooseContinuation;
 use LooseContinuationIntoIterator;
+use ScheduleOneTaskNoContinuations;
 use Scheduler;
+use ScheduleTrait;
 use Task;
 use TaskAdderHasTasksTrait;
 use TaskAdderMultipleTasks;
@@ -27,12 +27,12 @@ impl <'a> TaskAdderOneTask<'a> {
         TaskAdderMultipleTasks::new(self.scheduler)
     }
 
-    fn convert_to_continuation_adder_one_task_multiple_continuations(self) -> ContinuationAdderOneTaskMultipleContinuations {
-        ContinuationAdderOneTaskMultipleContinuations
+    fn convert_to_continuation_adder_one_task_multiple_continuations(self) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
+        ContinuationAdderOneTaskMultipleContinuations::new(self.scheduler)
     }
 
-    fn convert_to_continuation_adder_one_task_one_continuation(self) -> ContinuationAdderOneTaskOneContinuation {
-        ContinuationAdderOneTaskOneContinuation
+    fn convert_to_continuation_adder_one_task_one_continuation(self) -> ContinuationAdderOneTaskOneContinuation<'a> {
+        ContinuationAdderOneTaskOneContinuation::new(self.scheduler)
     }
 
     fn convert_to_schedule_one_task_no_continuations(self) -> ScheduleOneTaskNoContinuations {
@@ -40,10 +40,10 @@ impl <'a> TaskAdderOneTask<'a> {
     }
 }
 
-impl <'a> TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuations,
-                                 ContinuationAdderMultipleTasksOneContinuation,
-                                 ContinuationAdderOneTaskMultipleContinuations,
-                                 ContinuationAdderOneTaskOneContinuation,
+impl <'a> TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuations<'a>,
+                                 ContinuationAdderMultipleTasksOneContinuation<'a>,
+                                 ContinuationAdderOneTaskMultipleContinuations<'a>,
+                                 ContinuationAdderOneTaskOneContinuation<'a>,
                                  TaskAdderMultipleTasks<'a>> for TaskAdderOneTask<'a> {
     fn add_task<TTask: 'static + Task>(self, task: TTask) -> TaskAdderMultipleTasks<'a> {
         self.convert_to_task_adder_multiple_tasks()
@@ -61,26 +61,26 @@ impl <'a> TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuat
     }
 }
 
-impl <'a> ContinuationAdderTrait<ContinuationAdderOneTaskMultipleContinuations,
-                                 ContinuationAdderOneTaskOneContinuation> for TaskAdderOneTask<'a> {
-    fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdderOneTaskOneContinuation {
+impl <'a> ContinuationAdderTrait<ContinuationAdderOneTaskMultipleContinuations<'a>,
+                                 ContinuationAdderOneTaskOneContinuation<'a>> for TaskAdderOneTask<'a> {
+    fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdderOneTaskOneContinuation<'a> {
         self.convert_to_continuation_adder_one_task_one_continuation()
     }
 
-    fn add_continuation_box(self, continuation_box: TaskBox) -> ContinuationAdderOneTaskOneContinuation {
+    fn add_continuation_box(self, continuation_box: TaskBox) -> ContinuationAdderOneTaskOneContinuation<'a> {
         self.convert_to_continuation_adder_one_task_one_continuation()
     }
 
-    fn add_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations {
+    fn add_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
         self.convert_to_continuation_adder_one_task_multiple_continuations()
             .add_continuation_boxes(continuation_boxes)
     }
 
-    fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> ContinuationAdderOneTaskOneContinuation {
+    fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> ContinuationAdderOneTaskOneContinuation<'a> {
         self.convert_to_continuation_adder_one_task_one_continuation()
     }
 
-    fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations {
+    fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
         self.convert_to_continuation_adder_one_task_multiple_continuations()
             .add_loose_continuations(loose_continuations)
     }

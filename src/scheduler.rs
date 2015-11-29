@@ -23,10 +23,10 @@ impl Scheduler {
 }
 
 impl <'a> TaskAdderHasNoTasksTrait<'a,
-                                   ContinuationAdderMultipleTasksMultipleContinuations,
-                                   ContinuationAdderMultipleTasksOneContinuation,
-                                   ContinuationAdderOneTaskMultipleContinuations,
-                                   ContinuationAdderOneTaskOneContinuation,
+                                   ContinuationAdderMultipleTasksMultipleContinuations<'a>,
+                                   ContinuationAdderMultipleTasksOneContinuation<'a>,
+                                   ContinuationAdderOneTaskMultipleContinuations<'a>,
+                                   ContinuationAdderOneTaskOneContinuation<'a>,
                                    TaskAdderMultipleTasks<'a>,
                                    TaskAdderOneTask<'a>> for Scheduler {
     fn add_task<TTask: 'static + Task>(&'a self, task: TTask) -> TaskAdderOneTask<'a> {

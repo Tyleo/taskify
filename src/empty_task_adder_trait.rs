@@ -4,13 +4,12 @@ use TaskAdderTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
 
-pub trait TaskAdderHasNoTasksTrait<'a,
-                                   TContinuationAdderMultipleTasksMultipleContinuations,
-                                   TContinuationAdderMultipleTasksOneContinuation,
-                                   TContinuationAdderOneTaskMultipleContinuations,
-                                   TContinuationAdderOneTaskOneContinuation,
-                                   TTaskAdderMultipleTasks,
-                                   TTaskAdderOneTask>
+pub trait EmptyTaskAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
+                              TContinuationAdderMultipleTasksOneContinuation,
+                              TContinuationAdderOneTaskMultipleContinuations,
+                              TContinuationAdderOneTaskOneContinuation,
+                              TTaskAdderMultipleTasks,
+                              TTaskAdderOneTask>
         where TContinuationAdderMultipleTasksMultipleContinuations: ContinuationAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
                                                                                            TContinuationAdderMultipleTasksMultipleContinuations>,
               TContinuationAdderMultipleTasksOneContinuation: ContinuationAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
@@ -29,15 +28,15 @@ pub trait TaskAdderHasNoTasksTrait<'a,
                                                 TContinuationAdderOneTaskMultipleContinuations,
                                                 TContinuationAdderOneTaskOneContinuation,
                                                 TTaskAdderMultipleTasks> {
-    fn add_task<TTask>(&'a self,
+    fn add_task<TTask>(self,
                        task: TTask) -> TTaskAdderOneTask
         where TTask: 'static +
                      Task;
 
-    fn add_task_box(&'a self,
+    fn add_task_box(self,
                     task_box: TaskBox) -> TTaskAdderOneTask;
 
-    fn add_task_boxes<TTaskBoxIntoIterator>(&'a self,
+    fn add_task_boxes<TTaskBoxIntoIterator>(self,
                                             task_boxes: TTaskBoxIntoIterator) -> TTaskAdderMultipleTasks
         where TTaskBoxIntoIterator: 'static +
                                     TaskBoxIntoIterator;

@@ -9,6 +9,9 @@ extern crate alloc;
 extern crate deque;
 extern crate rand;
 
+mod begin_schedule_trait;
+pub use begin_schedule_trait::BeginScheduleTrait;
+
 mod continuation_adder_multiple_task_boxes_multiple_continuation_boxes;
 pub use continuation_adder_multiple_task_boxes_multiple_continuation_boxes::ContinuationAdderMultipleTasksMultipleContinuations;
 
@@ -23,6 +26,12 @@ pub use continuation_adder_one_task_box_one_continuation_box::ContinuationAdderO
 
 mod continuation_adder_trait;
 pub use continuation_adder_trait::ContinuationAdderTrait;
+
+mod empty_task_adder;
+pub use empty_task_adder::EmptyTaskAdder;
+
+mod empty_task_adder_trait;
+pub use empty_task_adder_trait::EmptyTaskAdderTrait;
 
 mod end_schedule_multiple_task_boxes_multiple_continuation_boxes;
 pub use end_schedule_multiple_task_boxes_multiple_continuation_boxes::EndScheduleMultipleTasksMultipleContinuations;
@@ -53,9 +62,6 @@ pub use scheduler::Scheduler;
 
 mod task;
 pub use task::Task;
-
-mod task_adder_has_no_tasks_trait;
-pub use task_adder_has_no_tasks_trait::TaskAdderHasNoTasksTrait;
 
 mod task_adder_multiple_task_boxes;
 pub use task_adder_multiple_task_boxes::TaskAdderMultipleTasks;

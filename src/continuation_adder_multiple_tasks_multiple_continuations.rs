@@ -24,24 +24,33 @@ impl <'a> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
     }
 
     fn convert_to_schedule(self) -> ScheduleMultipleTasksMultipleContinuations<'a> {
-        ScheduleMultipleTasksMultipleContinuations::new(self.scheduler)
+        ScheduleMultipleTasksMultipleContinuations::new(self.scheduler,
+                                                        self.task_boxes,
+                                                        self.continuation_boxes)
     }
 }
 
 impl <'a> ContinuationAdderTrait<ContinuationAdderMultipleTasksMultipleContinuations<'a>,
                                  ContinuationAdderMultipleTasksMultipleContinuations<'a>> for ContinuationAdderMultipleTasksMultipleContinuations<'a> {
-    fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
+    fn add_continuation<TTask>(self,
+                               continuation: TTask) -> ContinuationAdderMultipleTasksMultipleContinuations<'a>
+        where TTask: 'static +
+                     Task {
         let continuation_box = Box::new(continuation);
         self.add_continuation_box(continuation_box)
     }
 
-    fn add_continuation_box(self, continuation_box: TaskBox) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
+    fn add_continuation_box(self,
+                            continuation_box: TaskBox) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
         let mut mut_self = self;
         mut_self.continuation_boxes.push(continuation_box);
         mut_self
     }
 
-    fn add_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
+    fn add_continuation_boxes<TTaskBoxIntoIterator>(self,
+                                                    continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderMultipleTasksMultipleContinuations<'a>
+        where TTaskBoxIntoIterator: 'static +
+                                    TaskBoxIntoIterator {
         let mut mut_self = self;
         for continuation_box in continuation_boxes {
             mut_self.continuation_boxes.push(continuation_box);

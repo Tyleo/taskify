@@ -31,23 +31,33 @@ impl <'a> ContinuationAdderOneTaskOneContinuation<'a> {
     }
 
     fn convert_to_schedule(self) -> ScheduleOneTaskOneContinuation<'a> {
-        ScheduleOneTaskOneContinuation::new(self.scheduler)
+        ScheduleOneTaskOneContinuation::new(self.scheduler,
+                                            self.task_box,
+                                            self.continuation_box)
     }
 }
 
+
 impl <'a> ContinuationAdderTrait<ContinuationAdderOneTaskMultipleContinuations<'a>,
                                  ContinuationAdderOneTaskMultipleContinuations<'a>> for ContinuationAdderOneTaskOneContinuation<'a> {
-    fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
+    fn add_continuation<TTask>(self,
+                               continuation: TTask) -> ContinuationAdderOneTaskMultipleContinuations<'a>
+        where TTask: 'static +
+                     Task {
         let continuation_box = Box::new(continuation);
         self.add_continuation_box(continuation_box)
     }
 
-    fn add_continuation_box(self, continuation_box: TaskBox) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
+    fn add_continuation_box(self,
+                            continuation_box: TaskBox) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
         self.convert_to_continuation_adder_one_task_multiple_continuations()
             .add_continuation_box(continuation_box)
     }
 
-    fn add_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
+    fn add_continuation_boxes<TTaskBoxIntoIterator>(self,
+                                                    continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a>
+        where TTaskBoxIntoIterator: 'static +
+                                    TaskBoxIntoIterator {
         self.convert_to_continuation_adder_one_task_multiple_continuations()
             .add_continuation_boxes(continuation_boxes)
     }

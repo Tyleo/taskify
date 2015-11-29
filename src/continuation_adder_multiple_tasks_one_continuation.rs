@@ -1,5 +1,5 @@
-use ContinuationAdderTrait;
 use ContinuationAdderMultipleTasksMultipleContinuations;
+use ContinuationAdderTrait;
 use LooseContinuation;
 use LooseContinuationIntoIterator;
 use ScheduleMultipleTasksOneContinuation;
@@ -32,23 +32,32 @@ impl <'a> ContinuationAdderMultipleTasksOneContinuation<'a> {
     }
 
     fn convert_to_schedule(self) -> ScheduleMultipleTasksOneContinuation<'a> {
-        ScheduleMultipleTasksOneContinuation::new(self.scheduler)
+        ScheduleMultipleTasksOneContinuation::new(self.scheduler,
+                                                  self.task_boxes,
+                                                  self.continuation_box)
     }
 }
 
 impl <'a> ContinuationAdderTrait<ContinuationAdderMultipleTasksMultipleContinuations<'a>,
                                  ContinuationAdderMultipleTasksMultipleContinuations<'a>> for ContinuationAdderMultipleTasksOneContinuation<'a> {
-    fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
+    fn add_continuation<TTask>(self,
+                               continuation: TTask) -> ContinuationAdderMultipleTasksMultipleContinuations<'a>
+        where TTask: 'static +
+                     Task {
         let continuation_box = Box::new(continuation);
         self.add_continuation_box(continuation_box)
     }
 
-    fn add_continuation_box(self, continuation_box: TaskBox) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
+    fn add_continuation_box(self,
+                            continuation_box: TaskBox) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
         self.convert_to_continuation_adder_multiple_tasks_multiple_continuations()
             .add_continuation_box(continuation_box)
     }
 
-    fn add_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderMultipleTasksMultipleContinuations<'a> {
+    fn add_continuation_boxes<TTaskBoxIntoIterator>(self,
+                                                    continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderMultipleTasksMultipleContinuations<'a>
+        where TTaskBoxIntoIterator: 'static +
+                                    TaskBoxIntoIterator {
         self.convert_to_continuation_adder_multiple_tasks_multiple_continuations()
             .add_continuation_boxes(continuation_boxes)
     }

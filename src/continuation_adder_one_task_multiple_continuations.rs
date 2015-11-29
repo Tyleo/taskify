@@ -24,24 +24,33 @@ impl <'a> ContinuationAdderOneTaskMultipleContinuations<'a> {
     }
 
     fn convert_to_schedule(self) -> ScheduleOneTaskMultipleContinuations<'a> {
-        ScheduleOneTaskMultipleContinuations::new(self.scheduler)
+        ScheduleOneTaskMultipleContinuations::new(self.scheduler,
+                                                  self.task_box,
+                                                  self.continuation_boxes)
     }
 }
 
 impl <'a> ContinuationAdderTrait<ContinuationAdderOneTaskMultipleContinuations<'a>,
                                  ContinuationAdderOneTaskMultipleContinuations<'a>> for ContinuationAdderOneTaskMultipleContinuations<'a> {
-    fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
+    fn add_continuation<TTask>(self,
+                               continuation: TTask) -> ContinuationAdderOneTaskMultipleContinuations<'a>
+        where TTask: 'static +
+                     Task {
         let continuation_box = Box::new(continuation);
         self.add_continuation_box(continuation_box)
     }
 
-    fn add_continuation_box(self, continuation_box: TaskBox) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
+    fn add_continuation_box(self,
+                            continuation_box: TaskBox) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
         let mut mut_self = self;
         mut_self.continuation_boxes.push(continuation_box);
         mut_self
     }
 
-    fn add_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
+    fn add_continuation_boxes<TTaskBoxIntoIterator>(self,
+                                                    continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a>
+        where TTaskBoxIntoIterator: 'static +
+                                    TaskBoxIntoIterator {
         let mut mut_self = self;
         for continuation_box in continuation_boxes {
             mut_self.continuation_boxes.push(continuation_box);

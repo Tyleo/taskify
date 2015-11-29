@@ -46,7 +46,8 @@ impl <'a> TaskAdderOneTask<'a> {
     }
 
     fn convert_to_schedule_one_task_no_continuations(self) -> ScheduleOneTaskNoContinuations<'a> {
-        ScheduleOneTaskNoContinuations::new(self.scheduler)
+        ScheduleOneTaskNoContinuations::new(self.scheduler,
+                                            self.task_box)
     }
 }
 
@@ -55,17 +56,24 @@ impl <'a> TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuat
                                  ContinuationAdderOneTaskMultipleContinuations<'a>,
                                  ContinuationAdderOneTaskOneContinuation<'a>,
                                  TaskAdderMultipleTasks<'a>> for TaskAdderOneTask<'a> {
-    fn add_task<TTask: 'static + Task>(self, task: TTask) -> TaskAdderMultipleTasks<'a> {
+    fn add_task<TTask>(self,
+                       task: TTask) -> TaskAdderMultipleTasks<'a>
+        where TTask: 'static +
+                     Task {
         let task_box = Box::new(task);
         self.add_task_box(task_box)
     }
 
-    fn add_task_box(self, task_box: TaskBox) -> TaskAdderMultipleTasks<'a> {
+    fn add_task_box(self,
+                    task_box: TaskBox) -> TaskAdderMultipleTasks<'a> {
         self.convert_to_task_adder_multiple_tasks()
             .add_task_box(task_box)
     }
 
-    fn add_task_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a> {
+    fn add_task_boxes<TTaskBoxIntoIterator>(self,
+                                            task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a> 
+        where TTaskBoxIntoIterator: 'static +
+                                    TaskBoxIntoIterator {
         self.convert_to_task_adder_multiple_tasks()
             .add_task_boxes(task_boxes)
     }
@@ -73,16 +81,23 @@ impl <'a> TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuat
 
 impl <'a> ContinuationAdderTrait<ContinuationAdderOneTaskMultipleContinuations<'a>,
                                  ContinuationAdderOneTaskOneContinuation<'a>> for TaskAdderOneTask<'a> {
-    fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdderOneTaskOneContinuation<'a> {
+    fn add_continuation<TTask>(self,
+                               continuation: TTask) -> ContinuationAdderOneTaskOneContinuation<'a>
+        where TTask: 'static +
+                     Task {
         let continuation_box = Box::new(continuation);
         self.add_continuation_box(continuation_box)
     }
 
-    fn add_continuation_box(self, continuation_box: TaskBox) -> ContinuationAdderOneTaskOneContinuation<'a> {
+    fn add_continuation_box(self,
+                            continuation_box: TaskBox) -> ContinuationAdderOneTaskOneContinuation<'a> {
         self.convert_to_continuation_adder_one_task_one_continuation(continuation_box)
     }
 
-    fn add_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a> {
+    fn add_continuation_boxes<TTaskBoxIntoIterator>(self,
+                                                    continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderOneTaskMultipleContinuations<'a>
+        where TTaskBoxIntoIterator: 'static +
+                                    TaskBoxIntoIterator {
         self.convert_to_continuation_adder_one_task_multiple_continuations()
             .add_continuation_boxes(continuation_boxes)
     }

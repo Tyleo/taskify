@@ -4,7 +4,7 @@ use TaskBox;
 use TaskBoxIntoIterator;
 
 pub trait ContinuationAdderTrait<TContinuationAdderMultipleContinuations,
-                                 TContinuationAdderOneContinuation>: EndScheduleTrait
+                                 TContinuationAdderOneContinuation>: EndScheduleTrait<()>
         where TContinuationAdderMultipleContinuations: ContinuationAdderTrait<TContinuationAdderMultipleContinuations, TContinuationAdderMultipleContinuations>,
               TContinuationAdderOneContinuation: ContinuationAdderTrait<TContinuationAdderMultipleContinuations, TContinuationAdderMultipleContinuations> {
     fn add_continuation<TTask>(self,

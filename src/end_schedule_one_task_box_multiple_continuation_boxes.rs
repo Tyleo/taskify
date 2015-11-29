@@ -18,7 +18,7 @@ impl <'a> EndScheduleOneTaskMultipleContinuations<'a> {
     }
 }
 
-impl <'a> EndScheduleTrait for EndScheduleOneTaskMultipleContinuations<'a> {
+impl <'a> EndScheduleTrait<()> for EndScheduleOneTaskMultipleContinuations<'a> {
     fn end_schedule(self) {
         
     }

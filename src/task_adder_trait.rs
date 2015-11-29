@@ -9,7 +9,8 @@ pub trait TaskAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
                          TContinuationAdderOneTaskMultipleContinuations,
                          TContinuationAdderOneTaskOneContinuation,
                          TTaskAdderMultipleTasks>: ContinuationAdderTrait<TContinuationAdderOneTaskMultipleContinuations,
-                                                                          TContinuationAdderOneTaskOneContinuation> + EndScheduleTrait
+                                                                          TContinuationAdderOneTaskOneContinuation> +
+                                                   EndScheduleTrait<()>
     where TContinuationAdderMultipleTasksMultipleContinuations: ContinuationAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
                                                                                        TContinuationAdderMultipleTasksMultipleContinuations>,
           TContinuationAdderMultipleTasksOneContinuation: ContinuationAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,

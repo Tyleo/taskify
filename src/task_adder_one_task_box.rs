@@ -101,7 +101,7 @@ impl <'a> ContinuationAdderTrait<ContinuationAdderOneTaskMultipleContinuations<'
     }
 }
 
-impl <'a> EndScheduleTrait for TaskAdderOneTask<'a> {
+impl <'a> EndScheduleTrait<()> for TaskAdderOneTask<'a> {
     fn end_schedule(self) {
         self.convert_to_end_schedule_one_task_box_no_continuation_boxes()
             .end_schedule();

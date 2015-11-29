@@ -15,7 +15,7 @@ impl <'a> EndScheduleOneTaskNoContinuations<'a> {
     }
 }
 
-impl <'a> EndScheduleTrait for EndScheduleOneTaskNoContinuations<'a> {
+impl <'a> EndScheduleTrait<()> for EndScheduleOneTaskNoContinuations<'a> {
     fn end_schedule(self) {
         
     }

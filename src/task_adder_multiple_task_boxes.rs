@@ -5,7 +5,7 @@ use EndScheduleMultipleTasksNoContinuations;
 use Scheduler;
 use EndScheduleTrait;
 use Task;
-use TaskAdderHasTasksTrait;
+use TaskAdderTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
 
@@ -40,11 +40,11 @@ impl <'a> TaskAdderMultipleTasks<'a> {
     }
 }
 
-impl <'a> TaskAdderHasTasksTrait<ContinuationAdderMultipleTasksMultipleContinuations<'a>,
-                                 ContinuationAdderMultipleTasksOneContinuation<'a>,
-                                 ContinuationAdderMultipleTasksMultipleContinuations<'a>,
-                                 ContinuationAdderMultipleTasksOneContinuation<'a>,
-                                 TaskAdderMultipleTasks<'a>> for TaskAdderMultipleTasks<'a> {
+impl <'a> TaskAdderTrait<ContinuationAdderMultipleTasksMultipleContinuations<'a>,
+                         ContinuationAdderMultipleTasksOneContinuation<'a>,
+                         ContinuationAdderMultipleTasksMultipleContinuations<'a>,
+                         ContinuationAdderMultipleTasksOneContinuation<'a>,
+                         TaskAdderMultipleTasks<'a>> for TaskAdderMultipleTasks<'a> {
     fn add_task<TTask>(self,
                        task: TTask) -> TaskAdderMultipleTasks<'a>
         where TTask: 'static +

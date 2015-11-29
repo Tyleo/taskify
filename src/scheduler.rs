@@ -5,7 +5,7 @@ use ContinuationAdderOneTaskOneContinuation;
 use Task;
 use TaskAdderMultipleTasks;
 use TaskAdderHasNoTasksTrait;
-use TaskAdderHasTasksTrait;
+use TaskAdderTrait;
 use TaskAdderOneTask;
 use TaskBox;
 use TaskBoxIntoIterator;

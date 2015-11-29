@@ -64,7 +64,7 @@ mod task_adder_one_task_box;
 pub use task_adder_one_task_box::TaskAdderOneTask;
 
 mod task_adder_trait;
-pub use task_adder_trait::TaskAdderHasTasksTrait;
+pub use task_adder_trait::TaskAdderTrait;
 
 mod task_box;
 pub use task_box::TaskBox;

@@ -4,12 +4,12 @@ use Task;
 use TaskBox;
 use TaskBoxIntoIterator;
 
-pub trait TaskAdderHasTasksTrait<TContinuationAdderMultipleTasksMultipleContinuations,
-                                 TContinuationAdderMultipleTasksOneContinuation,
-                                 TContinuationAdderOneTaskMultipleContinuations,
-                                 TContinuationAdderOneTaskOneContinuation,
-                                 TTaskAdderMultipleTasks>: ContinuationAdderTrait<TContinuationAdderOneTaskMultipleContinuations,
-                                                                                  TContinuationAdderOneTaskOneContinuation> + EndScheduleTrait
+pub trait TaskAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
+                         TContinuationAdderMultipleTasksOneContinuation,
+                         TContinuationAdderOneTaskMultipleContinuations,
+                         TContinuationAdderOneTaskOneContinuation,
+                         TTaskAdderMultipleTasks>: ContinuationAdderTrait<TContinuationAdderOneTaskMultipleContinuations,
+                                                                          TContinuationAdderOneTaskOneContinuation> + EndScheduleTrait
         where TContinuationAdderMultipleTasksMultipleContinuations: ContinuationAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
                                                                                            TContinuationAdderMultipleTasksMultipleContinuations>,
               TContinuationAdderMultipleTasksOneContinuation: ContinuationAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
@@ -18,11 +18,11 @@ pub trait TaskAdderHasTasksTrait<TContinuationAdderMultipleTasksMultipleContinua
                                                                                      TContinuationAdderOneTaskMultipleContinuations>,
               TContinuationAdderOneTaskOneContinuation: ContinuationAdderTrait<TContinuationAdderOneTaskMultipleContinuations,
                                                                                TContinuationAdderOneTaskMultipleContinuations>,
-              TTaskAdderMultipleTasks: TaskAdderHasTasksTrait<TContinuationAdderMultipleTasksMultipleContinuations,
-                                                              TContinuationAdderMultipleTasksOneContinuation,
-                                                              TContinuationAdderMultipleTasksMultipleContinuations,
-                                                              TContinuationAdderMultipleTasksOneContinuation,
-                                                              TTaskAdderMultipleTasks> {
+              TTaskAdderMultipleTasks: TaskAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
+                                                      TContinuationAdderMultipleTasksOneContinuation,
+                                                      TContinuationAdderMultipleTasksMultipleContinuations,
+                                                      TContinuationAdderMultipleTasksOneContinuation,
+                                                      TTaskAdderMultipleTasks> {
     fn add_task<TTask>(self,
                        task: TTask) -> TTaskAdderMultipleTasks
         where TTask: 'static +

@@ -9,10 +9,6 @@ extern crate alloc;
 extern crate deque;
 extern crate rand;
 
-// Deprecated
-mod continuation_adder;
-pub use continuation_adder::ContinuationAdder;
-
 mod continuation_adder_multiple_tasks_multiple_continuations;
 pub use continuation_adder_multiple_tasks_multiple_continuations::ContinuationAdderMultipleTasksMultipleContinuations;
 
@@ -27,10 +23,6 @@ pub use continuation_adder_one_task_one_continuation::ContinuationAdderOneTaskOn
 
 mod continuation_adder_trait;
 pub use continuation_adder_trait::ContinuationAdderTrait;
-
-// Deprecated
-mod schedule;
-pub use schedule::Schedule;
 
 mod schedule_multiple_tasks_multiple_continuations;
 pub use schedule_multiple_tasks_multiple_continuations::ScheduleMultipleTasksMultipleContinuations;
@@ -62,12 +54,17 @@ pub use loose_continuation_into_iterator::LooseContinuationIntoIterator;
 mod task;
 pub use task::Task;
 
-// Deprecated
-mod task_adder;
-pub use task_adder::TaskAdder;
+mod task_adder_has_no_tasks_trait;
+pub use task_adder_has_no_tasks_trait::TaskAdderHasNoTasksTrait;
 
-mod task_adder_trait;
-pub use task_adder_trait::TaskAdderTrait;
+mod task_adder_has_tasks_trait;
+pub use task_adder_has_tasks_trait::TaskAdderHasTasksTrait;
+
+mod task_adder_multiple_tasks;
+pub use task_adder_multiple_tasks::TaskAdderMultipleTasks;
+
+mod task_adder_one_task;
+pub use task_adder_one_task::TaskAdderOneTask;
 
 mod task_box;
 pub use task_box::TaskBox;
@@ -77,10 +74,6 @@ pub use task_box_into_iterator::TaskBoxIntoIterator;
 
 mod task_scheduler_1;
 pub use task_scheduler_1::TaskScheduler1;
-
-mod task_scheduler_trait;
-pub use task_scheduler_trait::TaskSchedulerTrait;
-
 
 
 

@@ -9,17 +9,49 @@ extern crate alloc;
 extern crate deque;
 extern crate rand;
 
+// Deprecated
 mod continuation_adder;
 pub use continuation_adder::ContinuationAdder;
+
+mod continuation_adder_multiple_tasks_multiple_continuations;
+pub use continuation_adder_multiple_tasks_multiple_continuations::ContinuationAdderMultipleTasksMultipleContinuations;
+
+mod continuation_adder_multiple_tasks_one_continuation;
+pub use continuation_adder_multiple_tasks_one_continuation::ContinuationAdderMultipleTasksOneContinuation;
+
+mod continuation_adder_one_task_multiple_continuations;
+pub use continuation_adder_one_task_multiple_continuations::ContinuationAdderOneTaskMultipleContinuations;
+
+mod continuation_adder_one_task_one_continuation;
+pub use continuation_adder_one_task_one_continuation::ContinuationAdderOneTaskOneContinuation;
 
 mod continuation_adder_trait;
 pub use continuation_adder_trait::ContinuationAdderTrait;
 
-mod end_schedule;
-pub use end_schedule::EndSchedule;
+// Deprecated
+mod schedule;
+pub use schedule::Schedule;
 
-mod end_schedule_trait;
-pub use end_schedule_trait::EndScheduleTrait;
+mod schedule_multiple_tasks_multiple_continuations;
+pub use schedule_multiple_tasks_multiple_continuations::ScheduleMultipleTasksMultipleContinuations;
+
+mod schedule_multiple_tasks_no_continuations;
+pub use schedule_multiple_tasks_no_continuations::ScheduleMultipleTasksNoContinuations;
+
+mod schedule_multiple_tasks_one_continuation;
+pub use schedule_multiple_tasks_one_continuation::ScheduleMultipleTasksOneContinuation;
+
+mod schedule_one_task_multiple_continuations;
+pub use schedule_one_task_multiple_continuations::ScheduleOneTaskMultipleContinuations;
+
+mod schedule_one_task_no_continuations;
+pub use schedule_one_task_no_continuations::ScheduleOneTaskNoContinuations;
+
+mod schedule_one_task_one_continuation;
+pub use schedule_one_task_one_continuation::ScheduleOneTaskOneContinuation;
+
+mod schedule_trait;
+pub use schedule_trait::ScheduleTrait;
 
 mod loose_continuation;
 pub use loose_continuation::LooseContinuation;
@@ -30,6 +62,7 @@ pub use loose_continuation_into_iterator::LooseContinuationIntoIterator;
 mod task;
 pub use task::Task;
 
+// Deprecated
 mod task_adder;
 pub use task_adder::TaskAdder;
 

@@ -1,6 +1,6 @@
 use ContinuationAdder;
 use ContinuationAdderTrait;
-use EndScheduleTrait;
+use ScheduleTrait;
 use LooseContinuation;
 use LooseContinuationIntoIterator;
 use Task;
@@ -11,12 +11,12 @@ use TaskBoxIntoIterator;
 pub struct TaskAdder;
 
 impl TaskAdder {
-    fn ConvertToContinuationAdder(self) -> ContinuationAdder {
+    fn convert_to_continuation_adder(self) -> ContinuationAdder {
         ContinuationAdder
     }
 }
 
-impl TaskAdderTrait<ContinuationAdder, TaskAdder> for TaskAdder {
+impl TaskAdderTrait<ContinuationAdder, ContinuationAdder, TaskAdder, TaskAdder> for TaskAdder {
     fn add_task<TTask: 'static + Task>(self, task: TTask) -> TaskAdder {
         self
     }
@@ -30,36 +30,36 @@ impl TaskAdderTrait<ContinuationAdder, TaskAdder> for TaskAdder {
     }
 }
 
-impl ContinuationAdderTrait<ContinuationAdder> for TaskAdder {
+impl ContinuationAdderTrait<ContinuationAdder, ContinuationAdder> for TaskAdder {
     fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdder {
-        self.ConvertToContinuationAdder()
+        self.convert_to_continuation_adder()
             .add_continuation(continuation)
     }
 
     fn add_continuation_box(self, continuation_box: TaskBox) -> ContinuationAdder {
-        self.ConvertToContinuationAdder()
+        self.convert_to_continuation_adder()
             .add_continuation_box(continuation_box)
     }
 
     fn add_continuation_boxes<TTaskBoxIntoIterator: 'static + TaskBoxIntoIterator>(self, continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdder {
-        self.ConvertToContinuationAdder()
+        self.convert_to_continuation_adder()
             .add_continuation_boxes(continuation_boxes)
     }
 
     fn add_loose_continuation(self, loose_continuation: LooseContinuation) -> ContinuationAdder {
-        self.ConvertToContinuationAdder()
+        self.convert_to_continuation_adder()
             .add_loose_continuation(loose_continuation)
     }
 
     fn add_loose_continuations<TLooseContinuationIntoIterator: 'static + LooseContinuationIntoIterator>(self, loose_continuations: TLooseContinuationIntoIterator) -> ContinuationAdder {
-        self.ConvertToContinuationAdder()
+        self.convert_to_continuation_adder()
             .add_loose_continuations(loose_continuations)
     }
 }
 
-impl EndScheduleTrait for TaskAdder {
-    fn EndSchedule(self) {
-        self.ConvertToContinuationAdder()
-            .EndSchedule();
+impl ScheduleTrait for TaskAdder {
+    fn schedule(self) {
+        self.convert_to_continuation_adder()
+            .schedule();
     }
 }

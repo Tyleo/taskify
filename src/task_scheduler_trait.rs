@@ -1,5 +1,5 @@
 use ContinuationAdderTrait;
-use EndScheduleTrait;
+use ScheduleTrait;
 use TaskAdderTrait;
 
 pub trait TaskSchedulerTrait {

@@ -1,6 +1,6 @@
 use ContinuationAdderTrait;
-use EndSchedule;
-use EndScheduleTrait;
+use Schedule;
+use ScheduleTrait;
 use LooseContinuation;
 use LooseContinuationIntoIterator;
 use Task;
@@ -10,12 +10,12 @@ use TaskBoxIntoIterator;
 pub struct ContinuationAdder;
 
 impl ContinuationAdder {
-    fn ConvertToEndSchedule(self) -> EndSchedule {
-        EndSchedule
+    fn convert_to_schedule(self) -> Schedule {
+        Schedule
     }
 }
 
-impl ContinuationAdderTrait<ContinuationAdder> for ContinuationAdder {
+impl ContinuationAdderTrait<ContinuationAdder, ContinuationAdder> for ContinuationAdder {
     fn add_continuation<TTask: 'static + Task>(self, continuation: TTask) -> ContinuationAdder {
         self
     }
@@ -37,9 +37,9 @@ impl ContinuationAdderTrait<ContinuationAdder> for ContinuationAdder {
     }
 }
 
-impl EndScheduleTrait for ContinuationAdder {
-    fn EndSchedule(self) {
-        self.ConvertToEndSchedule()
-            .EndSchedule();
+impl ScheduleTrait for ContinuationAdder {
+    fn schedule(self) {
+        self.convert_to_schedule()
+            .schedule();
     }
 }

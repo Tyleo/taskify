@@ -17,8 +17,8 @@ impl <'a> ContinuationAdderOneTaskMultipleContinuations<'a> {
         ContinuationAdderOneTaskMultipleContinuations { scheduler: scheduler }
     }
 
-    fn convert_to_schedule(self) -> ScheduleOneTaskMultipleContinuations {
-        ScheduleOneTaskMultipleContinuations
+    fn convert_to_schedule(self) -> ScheduleOneTaskMultipleContinuations<'a> {
+        ScheduleOneTaskMultipleContinuations::new(self.scheduler)
     }
 }
 

@@ -1,8 +1,17 @@
+use Scheduler;
 use ScheduleTrait;
 
-pub struct ScheduleMultipleTasksNoContinuations;
+pub struct ScheduleMultipleTasksNoContinuations<'a> {
+    scheduler: &'a Scheduler,
+}
 
-impl ScheduleTrait for ScheduleMultipleTasksNoContinuations {
+impl <'a> ScheduleMultipleTasksNoContinuations<'a> {
+    pub fn new(scheduler: &'a Scheduler) -> ScheduleMultipleTasksNoContinuations<'a> {
+        ScheduleMultipleTasksNoContinuations { scheduler: scheduler }
+    }
+}
+
+impl <'a> ScheduleTrait for ScheduleMultipleTasksNoContinuations<'a> {
     fn schedule(self) {
         
     }

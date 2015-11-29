@@ -28,8 +28,8 @@ impl <'a> TaskAdderMultipleTasks<'a> {
         ContinuationAdderMultipleTasksOneContinuation::new(self.scheduler)
     }
 
-    fn convert_to_schedule_multiple_tasks_no_continuations(self) -> ScheduleMultipleTasksNoContinuations {
-        ScheduleMultipleTasksNoContinuations
+    fn convert_to_schedule_multiple_tasks_no_continuations(self) -> ScheduleMultipleTasksNoContinuations<'a> {
+        ScheduleMultipleTasksNoContinuations::new(self.scheduler)
     }
 }
 

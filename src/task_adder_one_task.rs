@@ -35,8 +35,8 @@ impl <'a> TaskAdderOneTask<'a> {
         ContinuationAdderOneTaskOneContinuation::new(self.scheduler)
     }
 
-    fn convert_to_schedule_one_task_no_continuations(self) -> ScheduleOneTaskNoContinuations {
-        ScheduleOneTaskNoContinuations
+    fn convert_to_schedule_one_task_no_continuations(self) -> ScheduleOneTaskNoContinuations<'a> {
+        ScheduleOneTaskNoContinuations::new(self.scheduler)
     }
 }
 

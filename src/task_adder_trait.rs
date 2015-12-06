@@ -10,7 +10,7 @@ pub trait TaskAdderTrait<TContinuationAdderMultipleTaskBoxesMultipleContinuation
                          TContinuationAdderOneTaskBoxOneContinuationBox,
                          TTaskAdderMultipleTaskBoxes>: ContinuationAdderTrait<TContinuationAdderOneTaskBoxMultipleContinuationBoxes,
                                                                               TContinuationAdderOneTaskBoxOneContinuationBox> +
-                                                   EndScheduleTrait<()>
+                                                       EndScheduleTrait
     where TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes: ContinuationAdderTrait<TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes,
                                                                                                TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes>,
           TContinuationAdderMultipleTaskBoxesOneContinuationBox: ContinuationAdderTrait<TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes,

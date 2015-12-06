@@ -1,3 +1,5 @@
-pub trait EndScheduleTrait<TResult> {
-    fn end_schedule(self) -> TResult;
+pub trait EndScheduleTrait {
+    type TEndScheduleReturn;
+
+    fn end_schedule(self) -> Self::TEndScheduleReturn;
 }

@@ -11,20 +11,29 @@ use TaskAdderOneTaskBox;
 pub struct Scheduler;
 
 impl Scheduler {
-    fn convert_to_empty_task_adder<'a>(&'a self) -> EmptyTaskAdder<'a> {
+    fn convert_to_empty_task_adder<'a>(&'a self) -> EmptyTaskAdder<'a,
+                                                                   Scheduler> {
         EmptyTaskAdder::new(self)
     }
 }
 
 impl <'a> BeginScheduleTrait<'a,
-                             ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a>,
-                             ContinuationAdderMultipleTaskBoxesOneContinuationBox<'a>,
-                             ContinuationAdderOneTaskBoxMultipleContinuationBoxes<'a>,
-                             ContinuationAdderOneTaskBoxOneContinuationBox<'a>,
-                             EmptyTaskAdder<'a>,
-                             TaskAdderMultipleTaskBoxes<'a>,
-                             TaskAdderOneTaskBox<'a>> for Scheduler {
-    fn begin_schedule(&'a self) -> EmptyTaskAdder<'a> {
+                             ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
+                                                                                         Scheduler>,
+                             ContinuationAdderMultipleTaskBoxesOneContinuationBox<'a,
+                                                                                  Scheduler>,
+                             ContinuationAdderOneTaskBoxMultipleContinuationBoxes<'a,
+                                                                                  Scheduler>,
+                             ContinuationAdderOneTaskBoxOneContinuationBox<'a,
+                                                                           Scheduler>,
+                             EmptyTaskAdder<'a,
+                                            Scheduler>,
+                             TaskAdderMultipleTaskBoxes<'a,
+                                                        Scheduler>,
+                             TaskAdderOneTaskBox<'a,
+                                                 Scheduler>> for Scheduler {
+    fn begin_schedule(&'a self) -> EmptyTaskAdder<'a,
+                                                  Scheduler> {
         self.convert_to_empty_task_adder()
     }
 }

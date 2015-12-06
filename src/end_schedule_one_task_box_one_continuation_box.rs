@@ -4,14 +4,16 @@ use TaskBox;
 
 pub struct EndScheduleOneTaskBoxOneContinuationBox<'a,
                                                    TScheduler>
-    where TScheduler: 'a + SchedulerTrait {
+    where TScheduler: 'a +
+                      SchedulerTrait {
     scheduler: &'a TScheduler,
     task_box: TaskBox,
     continuation_box: TaskBox,
 }
 
-impl <'a, TScheduler> EndScheduleOneTaskBoxOneContinuationBox<'a,
-                                                              TScheduler>
+impl <'a,
+      TScheduler> EndScheduleOneTaskBoxOneContinuationBox<'a,
+                                                          TScheduler>
     where TScheduler: SchedulerTrait {
     pub fn new(scheduler: &'a TScheduler,
                task_box: TaskBox,
@@ -23,10 +25,13 @@ impl <'a, TScheduler> EndScheduleOneTaskBoxOneContinuationBox<'a,
     }
 }
 
-impl <'a, TScheduler> EndScheduleTrait<TScheduler::TScheduleReturn> for EndScheduleOneTaskBoxOneContinuationBox<'a,
-                                                                                                                 TScheduler>
+impl <'a,
+      TScheduler> EndScheduleTrait for EndScheduleOneTaskBoxOneContinuationBox<'a,
+                                                                               TScheduler>
     where TScheduler: SchedulerTrait {
-    fn end_schedule(self) ->TScheduler::TScheduleReturn {
+    type TEndScheduleReturn = TScheduler::TScheduleReturn;
+    
+    fn end_schedule(self) -> Self::TEndScheduleReturn {
         self.scheduler.schedule()
     }
 }

@@ -1,25 +1,37 @@
-use Scheduler;
 use EndScheduleTrait;
+use SchedulerTrait;
 use TaskBox;
 
-pub struct EndScheduleOneTaskBoxMultipleContinuationBoxes<'a> {
-    scheduler: &'a Scheduler,
+pub struct EndScheduleOneTaskBoxMultipleContinuationBoxes<'a,
+                                                          TScheduler>
+    where TScheduler: 'a +
+                      SchedulerTrait {
+    scheduler: &'a TScheduler,
     task_box: TaskBox,
     continuation_boxes: Vec<TaskBox>,
 }
 
-impl <'a> EndScheduleOneTaskBoxMultipleContinuationBoxes<'a> {
-    pub fn new(scheduler: &'a Scheduler,
+impl <'a,
+      TScheduler> EndScheduleOneTaskBoxMultipleContinuationBoxes<'a,
+                                                                 TScheduler>
+    where TScheduler: SchedulerTrait {
+    pub fn new(scheduler: &'a TScheduler,
                task_box: TaskBox,
-               continuation_boxes: Vec<TaskBox>) -> EndScheduleOneTaskBoxMultipleContinuationBoxes<'a> {
+               continuation_boxes: Vec<TaskBox>) -> EndScheduleOneTaskBoxMultipleContinuationBoxes<'a,
+                                                                                                   TScheduler> {
         EndScheduleOneTaskBoxMultipleContinuationBoxes { scheduler: scheduler,
-                                                  task_box: task_box,
-                                                  continuation_boxes: continuation_boxes }
+                                                         task_box: task_box,
+                                                         continuation_boxes: continuation_boxes }
     }
 }
 
-impl <'a> EndScheduleTrait<()> for EndScheduleOneTaskBoxMultipleContinuationBoxes<'a> {
-    fn end_schedule(self) {
-        
+impl <'a,
+      TScheduler> EndScheduleTrait for EndScheduleOneTaskBoxMultipleContinuationBoxes<'a,
+                                                                                      TScheduler>
+    where TScheduler: SchedulerTrait{
+    type TEndScheduleReturn = TScheduler::TScheduleReturn;
+
+    fn end_schedule(self) -> Self::TEndScheduleReturn {
+        self.scheduler.schedule()
     }
 }

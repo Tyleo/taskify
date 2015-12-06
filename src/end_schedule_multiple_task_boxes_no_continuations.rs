@@ -1,22 +1,34 @@
-use Scheduler;
 use EndScheduleTrait;
+use SchedulerTrait;
 use TaskBox;
 
-pub struct EndScheduleMultipleTaskBoxesNoContinuations<'a> {
-    scheduler: &'a Scheduler,
+pub struct EndScheduleMultipleTaskBoxesNoContinuations<'a,
+                                                       TScheduler>
+    where TScheduler: 'a +
+                      SchedulerTrait {
+    scheduler: &'a TScheduler,
     task_boxes: Vec<TaskBox>,
 }
 
-impl <'a> EndScheduleMultipleTaskBoxesNoContinuations<'a> {
-    pub fn new(scheduler: &'a Scheduler,
-               task_boxes: Vec<TaskBox>) -> EndScheduleMultipleTaskBoxesNoContinuations<'a> {
+impl <'a,
+      TScheduler> EndScheduleMultipleTaskBoxesNoContinuations<'a,
+                                                              TScheduler>
+    where TScheduler: SchedulerTrait {
+    pub fn new(scheduler: &'a TScheduler,
+               task_boxes: Vec<TaskBox>) -> EndScheduleMultipleTaskBoxesNoContinuations<'a,
+                                                                                        TScheduler> {
         EndScheduleMultipleTaskBoxesNoContinuations { scheduler: scheduler,
                                                   task_boxes: task_boxes }
     }
 }
 
-impl <'a> EndScheduleTrait<()> for EndScheduleMultipleTaskBoxesNoContinuations<'a> {
-    fn end_schedule(self) {
-        
+impl <'a,
+      TScheduler> EndScheduleTrait for EndScheduleMultipleTaskBoxesNoContinuations<'a,
+                                                                                   TScheduler>
+    where TScheduler: SchedulerTrait {
+    type TEndScheduleReturn = TScheduler::TScheduleReturn;
+
+    fn end_schedule(self) -> Self::TEndScheduleReturn {
+        self.scheduler.schedule()
     }
 }

@@ -29,6 +29,8 @@ impl <'a,
     type TEndScheduleReturn = TScheduler::TScheduleReturn;
 
     fn end_schedule(self) -> Self::TEndScheduleReturn {
-        self.scheduler.schedule()
+        let task_box = self.task_box;
+
+        self.scheduler.schedule(task_box)
     }
 }

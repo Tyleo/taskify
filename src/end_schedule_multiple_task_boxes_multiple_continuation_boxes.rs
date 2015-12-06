@@ -1,4 +1,6 @@
+use DecayPtr;
 use EndScheduleTrait;
+use Scheduler;
 use SchedulerTrait;
 use TaskBox;
 
@@ -29,9 +31,35 @@ impl <'a,
       TScheduler> EndScheduleTrait for EndScheduleMultipleTaskBoxesMultipleContinuationBoxes<'a,
                                                                                              TScheduler>
     where TScheduler: SchedulerTrait {
-    type TEndScheduleReturn = TScheduler::TScheduleReturn;
+    type TEndScheduleReturn = TScheduler::TScheduleMultipleReturn;
 
     fn end_schedule(self) -> Self::TEndScheduleReturn {
-        self.scheduler.schedule()
+        let task_boxes = self.task_boxes;
+        let continuation_boxes = self.continuation_boxes;
+
+        let decaying_continuation_boxes = unsafe { DecayPtr::new(continuation_boxes) };
+
+        let mut result_tasks = Vec::<TaskBox>::new();
+
+        for task_box in task_boxes {
+            let current_decaying_continuation_boxes = unsafe { decaying_continuation_boxes.clone() };
+
+            let current_task = move |scheduler: &Scheduler| {
+                task_box.call_box((&scheduler,));
+                match unsafe { current_decaying_continuation_boxes.decay() } {
+                    Some(continuation_boxes) => {
+                        scheduler.schedule_multiple(continuation_boxes);
+                    },
+                    None => {
+                        // Do nothing
+                    },
+                }
+            };
+            let current_task_box = Box::new(current_task);
+
+            result_tasks.push(current_task_box);
+        }
+
+        self.scheduler.schedule_multiple(result_tasks)
     }
 }

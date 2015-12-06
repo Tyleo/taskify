@@ -14,12 +14,12 @@ struct DecayInner<T: ?Sized> {
     data: T,
 }
 
-unsafe impl<T: ?Sized + Sync + Send> Send for DecayPtr<T> { }
-unsafe impl<T: ?Sized + Sync + Send> Sync for DecayPtr<T> { }
+unsafe impl<T: ?Sized + Send> Send for DecayPtr<T> { }
+unsafe impl<T: ?Sized + Send> Sync for DecayPtr<T> { }
 impl <T: ?Sized + Unsize<U>, U: ?Sized> CoerceUnsized<DecayPtr<U>> for DecayPtr<T> { }
 
-unsafe impl<T: ?Sized + Sync + Send> Send for DecayInner<T> { }
-unsafe impl<T: ?Sized + Sync + Send> Sync for DecayInner<T> { }
+unsafe impl<T: ?Sized + Send> Send for DecayInner<T> { }
+unsafe impl<T: ?Sized + Send> Sync for DecayInner<T> { }
 
 impl<T> DecayPtr<T> {
     pub unsafe fn new(data: T) -> DecayPtr<T> {

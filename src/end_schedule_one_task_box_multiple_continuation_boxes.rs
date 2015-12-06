@@ -1,4 +1,5 @@
 use EndScheduleTrait;
+use Scheduler;
 use SchedulerTrait;
 use TaskBox;
 
@@ -32,6 +33,15 @@ impl <'a,
     type TEndScheduleReturn = TScheduler::TScheduleReturn;
 
     fn end_schedule(self) -> Self::TEndScheduleReturn {
-        self.scheduler.schedule()
+        let task_box = self.task_box;
+        let continuation_boxes = self.continuation_boxes;
+
+        let result_task = move |scheduler: &Scheduler| {
+            task_box.call_box((&scheduler,));
+            scheduler.schedule_multiple(continuation_boxes);
+        };
+        let result_task_box = Box::new(result_task);
+
+        self.scheduler.schedule(result_task_box)
     }
 }

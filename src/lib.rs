@@ -99,11 +99,11 @@ pub use task_box_into_iterator::TaskBoxIntoIterator;
 
 #[test]
 fn it_works2() {
-    let scheduler = Scheduler;
-    scheduler.begin_schedule()
-             .add_task(|scheduler: &Scheduler| { })
-             .add_continuation(|scheduler: &Scheduler| { })
-             .end_schedule();
+    // let scheduler = Scheduler;
+    // scheduler.begin_schedule()
+    //          .add_task(|scheduler: &Scheduler| { })
+    //          .add_continuation(|scheduler: &Scheduler| { })
+    //          .end_schedule();
 }
 
 #[test]

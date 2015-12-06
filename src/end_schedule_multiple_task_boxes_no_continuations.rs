@@ -1,4 +1,5 @@
 use EndScheduleTrait;
+use Scheduler;
 use SchedulerTrait;
 use TaskBox;
 
@@ -26,9 +27,11 @@ impl <'a,
       TScheduler> EndScheduleTrait for EndScheduleMultipleTaskBoxesNoContinuations<'a,
                                                                                    TScheduler>
     where TScheduler: SchedulerTrait {
-    type TEndScheduleReturn = TScheduler::TScheduleReturn;
+    type TEndScheduleReturn = TScheduler::TScheduleMultipleReturn;
 
     fn end_schedule(self) -> Self::TEndScheduleReturn {
-        self.scheduler.schedule()
+        let task_boxes = self.task_boxes;
+
+        self.scheduler.schedule_multiple(task_boxes)
     }
 }

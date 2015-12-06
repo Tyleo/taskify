@@ -77,7 +77,7 @@ impl <'a,
       TScheduler> EndScheduleTrait for ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
                                                                                                    TScheduler>
     where TScheduler: SchedulerTrait {
-    type TEndScheduleReturn = TScheduler::TScheduleReturn;
+    type TEndScheduleReturn = TScheduler::TScheduleMultipleReturn;
 
     fn end_schedule(self) -> Self::TEndScheduleReturn {
         self.convert_to_end_schedule_multiple_task_boxes_multiple_continuation_boxes()

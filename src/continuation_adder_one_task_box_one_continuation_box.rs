@@ -28,7 +28,8 @@ impl <'a> ContinuationAdderOneTaskBoxOneContinuationBox<'a> {
                                                                   Vec::new())
     }
 
-    fn convert_to_end_schedule_one_task_box_one_continuation_box(self) -> EndScheduleOneTaskBoxOneContinuationBox<'a> {
+    fn convert_to_end_schedule_one_task_box_one_continuation_box(self) -> EndScheduleOneTaskBoxOneContinuationBox<'a,
+                                                                                                                  Scheduler> {
         EndScheduleOneTaskBoxOneContinuationBox::new(self.scheduler,
                                                      self.task_box,
                                                      self.continuation_box)

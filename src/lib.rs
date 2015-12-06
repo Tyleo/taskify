@@ -60,6 +60,9 @@ pub use decay_ptr::DecayPtr;
 mod scheduler;
 pub use scheduler::Scheduler;
 
+mod scheduler_trait;
+pub use scheduler_trait::SchedulerTrait;
+
 mod task;
 pub use task::Task;
 

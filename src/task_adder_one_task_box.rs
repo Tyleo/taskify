@@ -93,8 +93,7 @@ impl <'a,
     fn add_task_boxes<TTaskBoxIntoIterator>(self,
                                             task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTaskBoxes<'a,
                                                                                                             TScheduler>
-        where TTaskBoxIntoIterator: 'static +
-                                    TaskBoxIntoIterator {
+        where TTaskBoxIntoIterator: TaskBoxIntoIterator {
         self.convert_to_task_adder_multiple_tasks()
             .add_task_boxes(task_boxes)
     }
@@ -125,8 +124,7 @@ impl <'a,
     fn add_continuation_boxes<TTaskBoxIntoIterator>(self,
                                                     continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderOneTaskBoxMultipleContinuationBoxes<'a,
                                                                                                                                                       TScheduler>
-        where TTaskBoxIntoIterator: 'static +
-                                    TaskBoxIntoIterator {
+        where TTaskBoxIntoIterator: TaskBoxIntoIterator {
         self.convert_to_continuation_adder_one_task_multiple_continuations()
             .add_continuation_boxes(continuation_boxes)
     }

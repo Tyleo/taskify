@@ -17,6 +17,5 @@ pub trait ContinuationAdderTrait<TContinuationAdderMultipleContinuationBoxes,
 
     fn add_continuation_boxes<TTaskBoxIntoIterator>(self,
                                                     continuation_boxes: TTaskBoxIntoIterator) -> TContinuationAdderMultipleContinuationBoxes
-        where TTaskBoxIntoIterator: 'static +
-                                    TaskBoxIntoIterator;
+        where TTaskBoxIntoIterator: TaskBoxIntoIterator;
 }

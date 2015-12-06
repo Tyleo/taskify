@@ -38,6 +38,5 @@ pub trait EmptyTaskAdderTrait<TContinuationAdderMultipleTaskBoxesMultipleContinu
 
     fn add_task_boxes<TTaskBoxIntoIterator>(self,
                                             task_boxes: TTaskBoxIntoIterator) -> TTaskAdderMultipleTaskBoxes
-        where TTaskBoxIntoIterator: 'static +
-                                    TaskBoxIntoIterator;
+        where TTaskBoxIntoIterator: TaskBoxIntoIterator;
 }

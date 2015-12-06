@@ -71,8 +71,7 @@ impl <'a,
     fn add_continuation_boxes<TTaskBoxIntoIterator>(self,
                                                     continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
                                                                                                                                                              TScheduler>
-        where TTaskBoxIntoIterator: 'static +
-                                    TaskBoxIntoIterator {
+        where TTaskBoxIntoIterator: TaskBoxIntoIterator {
         self.convert_to_continuation_adder_multiple_tasks_multiple_continuations()
             .add_continuation_boxes(continuation_boxes)
     }

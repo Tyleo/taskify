@@ -74,8 +74,7 @@ impl <'a,
     fn add_task_boxes<TTaskBoxIntoIterator>(self,
                                             task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTaskBoxes<'a,
                                                                                                             TScheduler>
-        where TTaskBoxIntoIterator: 'static +
-                                    TaskBoxIntoIterator {
+        where TTaskBoxIntoIterator: TaskBoxIntoIterator {
         self.convert_to_task_adder_multiple_task_boxes()
             .add_task_boxes(task_boxes)
     }

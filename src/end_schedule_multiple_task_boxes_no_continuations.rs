@@ -1,5 +1,4 @@
 use EndScheduleTrait;
-use Scheduler;
 use SchedulerTrait;
 use TaskBox;
 

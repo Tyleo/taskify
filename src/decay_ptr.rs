@@ -43,7 +43,7 @@ impl<T> DecayPtr<T> {
 
     fn decay_decrement(&self) -> bool {
         let inner = self.inner_ref();
-        inner.decay_count.fetch_sub(1, Ordering::Relaxed) == 1
+        inner.decay_count.fetch_sub(1, Ordering::Acquire) == 1
     }
 
     fn decay_release(self) -> T {

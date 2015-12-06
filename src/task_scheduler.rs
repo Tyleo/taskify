@@ -197,6 +197,7 @@ impl TaskScheduler {
                     None => { },
                 };
             };
+            // Error here. Tasks should not be added until after they are made.
             self.add_task(sub_complete_task);
         };
     }

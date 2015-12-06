@@ -4,40 +4,40 @@ use TaskAdderTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
 
-pub trait EmptyTaskAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
-                              TContinuationAdderMultipleTasksOneContinuation,
-                              TContinuationAdderOneTaskMultipleContinuations,
-                              TContinuationAdderOneTaskOneContinuation,
-                              TTaskAdderMultipleTasks,
-                              TTaskAdderOneTask>
-        where TContinuationAdderMultipleTasksMultipleContinuations: ContinuationAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
-                                                                                           TContinuationAdderMultipleTasksMultipleContinuations>,
-              TContinuationAdderMultipleTasksOneContinuation: ContinuationAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
-                                                                                     TContinuationAdderMultipleTasksMultipleContinuations>,
-              TContinuationAdderOneTaskMultipleContinuations: ContinuationAdderTrait<TContinuationAdderOneTaskMultipleContinuations,
-                                                                                     TContinuationAdderOneTaskMultipleContinuations>,
-              TContinuationAdderOneTaskOneContinuation: ContinuationAdderTrait<TContinuationAdderOneTaskMultipleContinuations,
-                                                                               TContinuationAdderOneTaskMultipleContinuations>,
-              TTaskAdderMultipleTasks: TaskAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
-                                                      TContinuationAdderMultipleTasksOneContinuation,
-                                                      TContinuationAdderMultipleTasksMultipleContinuations,
-                                                      TContinuationAdderMultipleTasksOneContinuation,
-                                                      TTaskAdderMultipleTasks>,
-              TTaskAdderOneTask: TaskAdderTrait<TContinuationAdderMultipleTasksMultipleContinuations,
-                                                TContinuationAdderMultipleTasksOneContinuation,
-                                                TContinuationAdderOneTaskMultipleContinuations,
-                                                TContinuationAdderOneTaskOneContinuation,
-                                                TTaskAdderMultipleTasks> {
+pub trait EmptyTaskAdderTrait<TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes,
+                              TContinuationAdderMultipleTaskBoxesOneContinuationBox,
+                              TContinuationAdderOneTaskBoxMultipleContinuationBoxes,
+                              TContinuationAdderOneTaskBoxOneContinuationBox,
+                              TTaskAdderMultipleTaskBoxes,
+                              TTaskAdderOneTaskBox>
+        where TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes: ContinuationAdderTrait<TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes,
+                                                                                                   TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes>,
+              TContinuationAdderMultipleTaskBoxesOneContinuationBox: ContinuationAdderTrait<TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes,
+                                                                                            TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes>,
+              TContinuationAdderOneTaskBoxMultipleContinuationBoxes: ContinuationAdderTrait<TContinuationAdderOneTaskBoxMultipleContinuationBoxes,
+                                                                                            TContinuationAdderOneTaskBoxMultipleContinuationBoxes>,
+              TContinuationAdderOneTaskBoxOneContinuationBox: ContinuationAdderTrait<TContinuationAdderOneTaskBoxMultipleContinuationBoxes,
+                                                                                     TContinuationAdderOneTaskBoxMultipleContinuationBoxes>,
+              TTaskAdderMultipleTaskBoxes: TaskAdderTrait<TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes,
+                                                          TContinuationAdderMultipleTaskBoxesOneContinuationBox,
+                                                          TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes,
+                                                          TContinuationAdderMultipleTaskBoxesOneContinuationBox,
+                                                          TTaskAdderMultipleTaskBoxes>,
+              TTaskAdderOneTaskBox: TaskAdderTrait<TContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes,
+                                                   TContinuationAdderMultipleTaskBoxesOneContinuationBox,
+                                                   TContinuationAdderOneTaskBoxMultipleContinuationBoxes,
+                                                   TContinuationAdderOneTaskBoxOneContinuationBox,
+                                                   TTaskAdderMultipleTaskBoxes> {
     fn add_task<TTask>(self,
-                       task: TTask) -> TTaskAdderOneTask
+                       task: TTask) -> TTaskAdderOneTaskBox
         where TTask: 'static +
                      Task;
 
     fn add_task_box(self,
-                    task_box: TaskBox) -> TTaskAdderOneTask;
+                    task_box: TaskBox) -> TTaskAdderOneTaskBox;
 
     fn add_task_boxes<TTaskBoxIntoIterator>(self,
-                                            task_boxes: TTaskBoxIntoIterator) -> TTaskAdderMultipleTasks
+                                            task_boxes: TTaskBoxIntoIterator) -> TTaskAdderMultipleTaskBoxes
         where TTaskBoxIntoIterator: 'static +
                                     TaskBoxIntoIterator;
 }

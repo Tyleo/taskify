@@ -1,11 +1,11 @@
 use BeginScheduleTrait;
-use ContinuationAdderMultipleTasksMultipleContinuations;
-use ContinuationAdderMultipleTasksOneContinuation;
-use ContinuationAdderOneTaskMultipleContinuations;
-use ContinuationAdderOneTaskOneContinuation;
+use ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes;
+use ContinuationAdderMultipleTaskBoxesOneContinuationBox;
+use ContinuationAdderOneTaskBoxMultipleContinuationBoxes;
+use ContinuationAdderOneTaskBoxOneContinuationBox;
 use EmptyTaskAdder;
-use TaskAdderMultipleTasks;
-use TaskAdderOneTask;
+use TaskAdderMultipleTaskBoxes;
+use TaskAdderOneTaskBox;
 
 pub struct Scheduler;
 
@@ -16,13 +16,13 @@ impl Scheduler {
 }
 
 impl <'a> BeginScheduleTrait<'a,
-                             ContinuationAdderMultipleTasksMultipleContinuations<'a>,
-                             ContinuationAdderMultipleTasksOneContinuation<'a>,
-                             ContinuationAdderOneTaskMultipleContinuations<'a>,
-                             ContinuationAdderOneTaskOneContinuation<'a>,
+                             ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a>,
+                             ContinuationAdderMultipleTaskBoxesOneContinuationBox<'a>,
+                             ContinuationAdderOneTaskBoxMultipleContinuationBoxes<'a>,
+                             ContinuationAdderOneTaskBoxOneContinuationBox<'a>,
                              EmptyTaskAdder<'a>,
-                             TaskAdderMultipleTasks<'a>,
-                             TaskAdderOneTask<'a>> for Scheduler {
+                             TaskAdderMultipleTaskBoxes<'a>,
+                             TaskAdderOneTaskBox<'a>> for Scheduler {
     fn begin_schedule(&'a self) -> EmptyTaskAdder<'a> {
         self.convert_to_empty_task_adder()
     }

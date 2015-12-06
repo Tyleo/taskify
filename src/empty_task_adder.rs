@@ -1,12 +1,12 @@
-use ContinuationAdderMultipleTasksMultipleContinuations;
-use ContinuationAdderMultipleTasksOneContinuation;
-use ContinuationAdderOneTaskMultipleContinuations;
-use ContinuationAdderOneTaskOneContinuation;
+use ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes;
+use ContinuationAdderMultipleTaskBoxesOneContinuationBox;
+use ContinuationAdderOneTaskBoxMultipleContinuationBoxes;
+use ContinuationAdderOneTaskBoxOneContinuationBox;
 use EmptyTaskAdderTrait;
 use Scheduler;
 use Task;
-use TaskAdderMultipleTasks;
-use TaskAdderOneTask;
+use TaskAdderMultipleTaskBoxes;
+use TaskAdderOneTaskBox;
 use TaskAdderTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
@@ -20,26 +20,26 @@ impl <'a> EmptyTaskAdder<'a> {
         EmptyTaskAdder { scheduler: scheduler }
     }
 
-    fn convert_to_task_adder_multiple_task_boxes(self) -> TaskAdderMultipleTasks<'a> {
-        TaskAdderMultipleTasks::new(self.scheduler,
-                                    Vec::new())
+    fn convert_to_task_adder_multiple_task_boxes(self) -> TaskAdderMultipleTaskBoxes<'a> {
+        TaskAdderMultipleTaskBoxes::new(self.scheduler,
+                                        Vec::new())
     }
 
     fn convert_to_task_adder_one_task_box(self,
-                                          task_box: TaskBox) -> TaskAdderOneTask<'a> {
-        TaskAdderOneTask::new(self.scheduler,
-                              task_box)
+                                          task_box: TaskBox) -> TaskAdderOneTaskBox<'a> {
+        TaskAdderOneTaskBox::new(self.scheduler,
+                                 task_box)
     }
 }
 
-impl <'a> EmptyTaskAdderTrait<ContinuationAdderMultipleTasksMultipleContinuations<'a>,
-                              ContinuationAdderMultipleTasksOneContinuation<'a>,
-                              ContinuationAdderOneTaskMultipleContinuations<'a>,
-                              ContinuationAdderOneTaskOneContinuation<'a>,
-                              TaskAdderMultipleTasks<'a>,
-                              TaskAdderOneTask<'a>> for EmptyTaskAdder<'a> {
+impl <'a> EmptyTaskAdderTrait<ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a>,
+                              ContinuationAdderMultipleTaskBoxesOneContinuationBox<'a>,
+                              ContinuationAdderOneTaskBoxMultipleContinuationBoxes<'a>,
+                              ContinuationAdderOneTaskBoxOneContinuationBox<'a>,
+                              TaskAdderMultipleTaskBoxes<'a>,
+                              TaskAdderOneTaskBox<'a>> for EmptyTaskAdder<'a> {
     fn add_task<TTask>(self,
-                       task: TTask) -> TaskAdderOneTask<'a>
+                       task: TTask) -> TaskAdderOneTaskBox<'a>
         where TTask: 'static +
                      Task {
         let task_box = Box::new(task);
@@ -47,12 +47,12 @@ impl <'a> EmptyTaskAdderTrait<ContinuationAdderMultipleTasksMultipleContinuation
     }
 
     fn add_task_box(self,
-                    task_box: TaskBox) -> TaskAdderOneTask<'a> {
+                    task_box: TaskBox) -> TaskAdderOneTaskBox<'a> {
         self.convert_to_task_adder_one_task_box(task_box)
     }
 
     fn add_task_boxes<TTaskBoxIntoIterator>(self,
-                                            task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTasks<'a>
+                                            task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTaskBoxes<'a>
         where TTaskBoxIntoIterator: 'static +
                                     TaskBoxIntoIterator {
         self.convert_to_task_adder_multiple_task_boxes()

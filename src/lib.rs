@@ -63,6 +63,9 @@ pub use scheduler::Scheduler;
 mod scheduler_trait;
 pub use scheduler_trait::SchedulerTrait;
 
+mod simple_begin_schedule_trait;
+pub use simple_begin_schedule_trait::SimpleBeginScheduleTrait;
+
 mod task;
 pub use task::Task;
 
@@ -96,7 +99,11 @@ pub use task_box_into_iterator::TaskBoxIntoIterator;
 
 #[test]
 fn it_works2() {
-
+    let scheduler = Scheduler;
+    scheduler.begin_schedule()
+             .add_task(|scheduler: &Scheduler| { })
+             .add_continuation(|scheduler: &Scheduler| { })
+             .end_schedule();
 }
 
 #[test]

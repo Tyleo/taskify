@@ -1,4 +1,3 @@
-use std::boxed::FnBox;
-use Scheduler;
+use Task;
 
-pub type TaskBox = Box<FnBox(&Scheduler) + Send>;
+pub type TaskBox = Box<Task<Output = ()>>;

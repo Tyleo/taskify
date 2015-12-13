@@ -1,6 +1,12 @@
 use std::boxed::FnBox;
-use Scheduler;
+use SchedulerTrait;
 
-pub trait Task: FnBox(&Scheduler) + Send { }
-impl <T> Task for T
-    where T: FnBox(&Scheduler) + Send { }
+pub trait Task<TScheduler>: FnBox(&TScheduler) +
+                            Send
+    where TScheduler: SchedulerTrait { }
+
+impl <TScheduler,
+      T> Task<TScheduler> for T
+    where TScheduler: SchedulerTrait,
+          T: FnBox(&TScheduler) +
+             Send { }

@@ -1,3 +1,4 @@
+use SchedulerTrait;
 use Task;
 
-pub type TaskBox = Box<Task<Output = ()>>;
+pub type TaskBox<TScheduler> = Box<Task<TScheduler, Output = ()>>;

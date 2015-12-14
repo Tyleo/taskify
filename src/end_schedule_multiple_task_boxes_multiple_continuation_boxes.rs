@@ -9,8 +9,8 @@ pub struct EndScheduleMultipleTaskBoxesMultipleContinuationBoxes<'a,
     where TScheduler: 'a +
                       SchedulerTrait {
     scheduler: &'a TScheduler,
-    task_boxes: Vec<TaskBox>,
-    continuation_boxes: Vec<TaskBox>,
+    task_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>,
+    continuation_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>,
 }
 
 impl <'a,
@@ -18,9 +18,9 @@ impl <'a,
                                                                         TScheduler>
     where TScheduler: SchedulerTrait {
     pub fn new(scheduler: &'a TScheduler,
-               task_boxes: Vec<TaskBox>,
-               continuation_boxes: Vec<TaskBox>) -> EndScheduleMultipleTaskBoxesMultipleContinuationBoxes<'a,
-                                                                                                          TScheduler> {
+               task_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>,
+               continuation_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>) -> EndScheduleMultipleTaskBoxesMultipleContinuationBoxes<'a,
+                                                                                                                                     TScheduler> {
         EndScheduleMultipleTaskBoxesMultipleContinuationBoxes { scheduler: scheduler,
                                                                 task_boxes: task_boxes,
                                                                 continuation_boxes: continuation_boxes }
@@ -39,12 +39,12 @@ impl <'a,
 
         let decaying_continuation_boxes = unsafe { DecayPtr::new(continuation_boxes) };
 
-        let mut result_tasks = Vec::<TaskBox>::new();
+        let mut result_tasks = Vec::<TaskBox<TScheduler::TTaskBoxParam>>::new();
 
         for task_box in task_boxes {
             let current_decaying_continuation_boxes = unsafe { decaying_continuation_boxes.clone() };
 
-            let current_task = move |scheduler: &Scheduler| {
+            let current_task = move |scheduler: &TScheduler::TTaskBoxParam| {
                 task_box.call_box((&scheduler,));
                 match unsafe { current_decaying_continuation_boxes.decay() } {
                     Some(continuation_boxes) => {

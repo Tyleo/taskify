@@ -7,7 +7,7 @@ pub struct EndScheduleOneTaskBoxNoContinuations<'a,
     where TScheduler: 'a +
                       SchedulerTrait {
     scheduler: &'a TScheduler,
-    task_box: TaskBox,
+    task_box: TaskBox<TScheduler::TTaskBoxParam>,
 }
 
 impl <'a,
@@ -15,8 +15,8 @@ impl <'a,
                                                        TScheduler>
     where TScheduler: SchedulerTrait {
     pub fn new(scheduler: &'a TScheduler,
-               task_box: TaskBox) -> EndScheduleOneTaskBoxNoContinuations<'a,
-                                                                          TScheduler> {
+               task_box: TaskBox<TScheduler::TTaskBoxParam>) -> EndScheduleOneTaskBoxNoContinuations<'a,
+                                                                                                     TScheduler> {
         EndScheduleOneTaskBoxNoContinuations { scheduler: scheduler,
                                                task_box: task_box }
     }

@@ -8,8 +8,8 @@ pub struct EndScheduleOneTaskBoxOneContinuationBox<'a,
     where TScheduler: 'a +
                       SchedulerTrait {
     scheduler: &'a TScheduler,
-    task_box: TaskBox,
-    continuation_box: TaskBox,
+    task_box: TaskBox<TScheduler::TTaskBoxParam>,
+    continuation_box: TaskBox<TScheduler::TTaskBoxParam>,
 }
 
 impl <'a,
@@ -17,9 +17,9 @@ impl <'a,
                                                           TScheduler>
     where TScheduler: SchedulerTrait {
     pub fn new(scheduler: &'a TScheduler,
-               task_box: TaskBox,
-               continuation_box: TaskBox) -> EndScheduleOneTaskBoxOneContinuationBox<'a,
-                                                                                     TScheduler> {
+               task_box: TaskBox<TScheduler::TTaskBoxParam>,
+               continuation_box: TaskBox<TScheduler::TTaskBoxParam>) -> EndScheduleOneTaskBoxOneContinuationBox<'a,
+                                                                                                                TScheduler> {
         EndScheduleOneTaskBoxOneContinuationBox { scheduler: scheduler,
                                                   task_box: task_box,
                                                   continuation_box: continuation_box }
@@ -36,7 +36,7 @@ impl <'a,
         let task_box = self.task_box;
         let continuation_box = self.continuation_box;
 
-        let complete_task = move |scheduler: &Scheduler| {
+        let complete_task = move |scheduler: &TScheduler::TTaskBoxParam| {
             task_box.call_box((&scheduler,));
             continuation_box.call_box((&scheduler,));
         };

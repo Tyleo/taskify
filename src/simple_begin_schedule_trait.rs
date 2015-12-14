@@ -15,6 +15,7 @@ pub trait SimpleBeginScheduleTrait<'a,
 
 impl <'a,
       TScheduler> BeginScheduleTrait<'a,
+                                     TScheduler,
                                      ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
                                                                                                  TScheduler>,
                                      ContinuationAdderMultipleTaskBoxesOneContinuationBox<'a,

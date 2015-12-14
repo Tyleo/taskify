@@ -11,8 +11,8 @@ pub struct ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
     where TScheduler: 'a +
                       SchedulerTrait {
     scheduler: &'a TScheduler,
-    task_boxes: Vec<TaskBox>,
-    continuation_boxes: Vec<TaskBox>,
+    task_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>,
+    continuation_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>,
 }
 
 impl <'a,
@@ -20,9 +20,9 @@ impl <'a,
                                                                               TScheduler>
     where TScheduler: SchedulerTrait {
     pub fn new(scheduler: &'a TScheduler,
-               task_boxes: Vec<TaskBox>,
-               continuation_boxes: Vec<TaskBox>) -> ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
-                                                                                                                TScheduler> {
+               task_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>,
+               continuation_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>) -> ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
+                                                                                                                                           TScheduler> {
         ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes { scheduler: scheduler,
                                                                       task_boxes: task_boxes,
                                                                       continuation_boxes: continuation_boxes }
@@ -37,7 +37,8 @@ impl <'a,
 }
 
 impl <'a,
-      TScheduler> ContinuationAdderTrait<ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
+      TScheduler> ContinuationAdderTrait<TScheduler,
+                                         ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
                                                                                                      TScheduler>,
                                          ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
                                                                                                      TScheduler>> for ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
@@ -47,14 +48,14 @@ impl <'a,
                                continuation: TTask) -> ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
                                                                                                                    TScheduler>
         where TTask: 'static +
-                     Task {
+                     Task<TScheduler::TTaskBoxParam> {
         let continuation_box = Box::new(continuation);
         self.add_continuation_box(continuation_box)
     }
 
     fn add_continuation_box(self,
-                            continuation_box: TaskBox) -> ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
-                                                                                                                      TScheduler> {
+                            continuation_box: TaskBox<TScheduler::TTaskBoxParam>) -> ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
+                                                                                                                                                 TScheduler> {
         let mut mut_self = self;
         mut_self.continuation_boxes.push(continuation_box);
         mut_self
@@ -63,7 +64,7 @@ impl <'a,
     fn add_continuation_boxes<TTaskBoxIntoIterator>(self,
                                                     continuation_boxes: TTaskBoxIntoIterator) -> ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
                                                                                                                                                              TScheduler>
-        where TTaskBoxIntoIterator: TaskBoxIntoIterator {
+        where TTaskBoxIntoIterator: TaskBoxIntoIterator<TScheduler::TTaskBoxParam> {
         let mut mut_self = self;
         for continuation_box in continuation_boxes {
             mut_self.continuation_boxes.push(continuation_box);

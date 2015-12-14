@@ -34,15 +34,16 @@ impl <'a,
     }
 
     fn convert_to_task_adder_one_task_box(self,
-                                          task_box: TaskBox) -> TaskAdderOneTaskBox<'a,
-                                                                                    TScheduler> {
+                                          task_box: TaskBox<TScheduler::TTaskBoxParam>) -> TaskAdderOneTaskBox<'a,
+                                                                                                               TScheduler> {
         TaskAdderOneTaskBox::new(self.scheduler,
                                  task_box)
     }
 }
 
 impl <'a,
-      TScheduler> EmptyTaskAdderTrait<ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
+      TScheduler> EmptyTaskAdderTrait<TScheduler,
+                                      ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes<'a,
                                                                                                   TScheduler>,
                                       ContinuationAdderMultipleTaskBoxesOneContinuationBox<'a,
                                                                                            TScheduler>,
@@ -60,21 +61,21 @@ impl <'a,
                        task: TTask) -> TaskAdderOneTaskBox<'a,
                                                            TScheduler>
         where TTask: 'static +
-                     Task {
+                     Task<TScheduler::TTaskBoxParam> {
         let task_box = Box::new(task);
         self.add_task_box(task_box)
     }
 
     fn add_task_box(self,
-                    task_box: TaskBox) -> TaskAdderOneTaskBox<'a,
-                                                              TScheduler> {
+                    task_box: TaskBox<TScheduler::TTaskBoxParam>) -> TaskAdderOneTaskBox<'a,
+                                                                     TScheduler> {
         self.convert_to_task_adder_one_task_box(task_box)
     }
 
     fn add_task_boxes<TTaskBoxIntoIterator>(self,
                                             task_boxes: TTaskBoxIntoIterator) -> TaskAdderMultipleTaskBoxes<'a,
                                                                                                             TScheduler>
-        where TTaskBoxIntoIterator: TaskBoxIntoIterator {
+        where TTaskBoxIntoIterator: TaskBoxIntoIterator<TScheduler::TTaskBoxParam> {
         self.convert_to_task_adder_multiple_task_boxes()
             .add_task_boxes(task_boxes)
     }

@@ -9,8 +9,8 @@ pub struct EndScheduleMultipleTaskBoxesOneContinuationBox<'a,
     where TScheduler: 'a +
                       SchedulerTrait {
     scheduler: &'a TScheduler,
-    task_boxes: Vec<TaskBox>,
-    continuation_box: TaskBox,
+    task_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>,
+    continuation_box: TaskBox<TScheduler::TTaskBoxParam>,
 }
 
 impl <'a,
@@ -18,9 +18,9 @@ impl <'a,
                                                                  TScheduler>
     where TScheduler: SchedulerTrait {
     pub fn new(scheduler: &'a TScheduler,
-               task_boxes: Vec<TaskBox>,
-               continuation_box: TaskBox) -> EndScheduleMultipleTaskBoxesOneContinuationBox<'a,
-                                                                                            TScheduler> {
+               task_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>,
+               continuation_box: TaskBox<TScheduler::TTaskBoxParam>) -> EndScheduleMultipleTaskBoxesOneContinuationBox<'a,
+                                                                                                                       TScheduler> {
         EndScheduleMultipleTaskBoxesOneContinuationBox { scheduler: scheduler,
                                                          task_boxes: task_boxes,
                                                          continuation_box: continuation_box }
@@ -39,12 +39,12 @@ impl <'a,
 
         let decaying_continuation_box = unsafe { DecayPtr::new(continuation_box) };
 
-        let mut result_tasks = Vec::<TaskBox>::new();
+        let mut result_tasks = Vec::<TaskBox<TScheduler::TTaskBoxParam>>::new();
 
         for task_box in task_boxes {
             let current_decaying_continuation_box = unsafe { decaying_continuation_box.clone() };
 
-            let current_task = move |scheduler: &Scheduler| {
+            let current_task = move |scheduler: &TScheduler::TTaskBoxParam| {
                 task_box.call_box((&scheduler,));
                 match unsafe { current_decaying_continuation_box.decay() } {
                     Some(continuation_box) => {

@@ -2,7 +2,8 @@ use TaskBox;
 use TaskBoxIntoIterator;
 
 pub trait SchedulerTrait {
-    type TTaskBoxParam;
+    type TTaskBoxParam: 'static +
+                        SchedulerTrait<TTaskBoxParam = Self::TTaskBoxParam>;
     type TScheduleReturn;
     type TScheduleMultipleReturn;
 

@@ -7,7 +7,7 @@ pub struct EndScheduleMultipleTaskBoxesNoContinuations<'a,
     where TScheduler: 'a +
                       SchedulerTrait {
     scheduler: &'a TScheduler,
-    task_boxes: Vec<TaskBox<TScheduler>>,
+    task_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>,
 }
 
 impl <'a,
@@ -15,10 +15,10 @@ impl <'a,
                                                               TScheduler>
     where TScheduler: SchedulerTrait {
     pub fn new(scheduler: &'a TScheduler,
-               task_boxes: Vec<TaskBox<TScheduler>>) -> EndScheduleMultipleTaskBoxesNoContinuations<'a,
-                                                                                                    TScheduler> {
+               task_boxes: Vec<TaskBox<TScheduler::TTaskBoxParam>>) -> EndScheduleMultipleTaskBoxesNoContinuations<'a,
+                                                                                                                   TScheduler> {
         EndScheduleMultipleTaskBoxesNoContinuations { scheduler: scheduler,
-                                                  task_boxes: task_boxes }
+                                                      task_boxes: task_boxes }
     }
 }
 

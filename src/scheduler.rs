@@ -42,6 +42,54 @@ impl <TRng> Scheduler<TRng>
                                            .collect();
         schedulers
     }
+
+    pub fn run(&mut self) {
+        while {
+            while self.try_run_worker() { }
+            self.try_run_stealers()
+        } { }
+    }
+
+    fn try_run_worker(&mut self) -> bool {
+        match self.worker.pop() {
+            Some(task_box) => {
+                task_box.call_box((&self,));
+                true
+            },
+            None => {
+                false
+            },
+        }
+    }
+
+    fn try_run_stealers(&mut self) -> bool {
+        let num_stealers = self.stealers.len();
+        let start_index = self.rng.gen_range(0, num_stealers);
+
+        self.stealers.iter()
+                     .cycle()
+                     .skip(start_index)
+                     .take(num_stealers)
+                     .any(|stealer| self.try_run_stealer(stealer))
+    }
+
+    fn try_run_stealer(&self, stealer: &Stealer<TaskBox<Scheduler<TRng>>>) -> bool {
+        while {
+            match stealer.steal() {
+                Stolen::Empty => {
+                    false
+                },
+                Stolen::Abort => {
+                    true
+                },
+                Stolen::Data(data) => {
+                    data.call_box((&self,));
+                    return true;
+                },
+            }
+        } { }
+        false
+    }
 }
 
 impl<'a,

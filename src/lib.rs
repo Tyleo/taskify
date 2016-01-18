@@ -27,6 +27,9 @@ pub use continuation_adder_one_task_box_one_continuation_box::ContinuationAdderO
 mod continuation_adder_trait;
 pub use continuation_adder_trait::ContinuationAdderTrait;
 
+mod decay_ptr;
+pub use decay_ptr::DecayPtr;
+
 mod empty_task_adder;
 pub use empty_task_adder::EmptyTaskAdder;
 
@@ -54,8 +57,8 @@ pub use end_schedule_one_task_box_one_continuation_box::EndScheduleOneTaskBoxOne
 mod end_schedule_trait;
 pub use end_schedule_trait::EndScheduleTrait;
 
-mod decay_ptr;
-pub use decay_ptr::DecayPtr;
+mod loose_continuation;
+pub use loose_continuation::LooseContinuation;
 
 mod scheduler;
 pub use scheduler::Scheduler;
@@ -113,22 +116,26 @@ fn it_works() {
     for scheduler in &schedulers {
         for i in 0..num_tasks_per_thread {
             let clone = shared.clone();
-            scheduler
-                .begin_schedule()
-                .add_task(
-                    move |scheduler: &Scheduler<StdRng>| {
-                        clone.fetch_add(1, Ordering::Relaxed);
-                        let mut value = 0;
-                        for i in 0..1000 {
-                            value = i + 5;
+
+            let loose_continuation =
+                LooseContinuation::<Scheduler<_>>::new()
+                    .begin_schedule()
+                    .add_task(
+                        move |scheduler: &Scheduler<StdRng>| {
+                            clone.fetch_add(1, Ordering::Relaxed);
+                            let mut value = 0;
+                            for i in 0..1000 {
+                                value = i + 5;
+                            }
                         }
-                    }
-                )
-                .end_schedule();
+                    )
+                    .end_schedule();
+
+            scheduler.schedule(loose_continuation);
         }
     }
 
-    for join_handle in {
+    let join_handles: Vec<_> =
         schedulers
             .into_iter()
             .map(
@@ -139,8 +146,9 @@ fn it_works() {
                         }
                     )
                 }
-            )
-    } {
+            ).collect();
+
+    for join_handle in join_handles {
         join_handle.join();
     }
 

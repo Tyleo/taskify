@@ -1,3 +1,4 @@
+use SimpleBeginScheduleTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
 
@@ -13,3 +14,11 @@ pub trait SchedulerTrait {
                                                task_boxes: TTaskBoxIntoIterator) -> Self::TScheduleMultipleReturn
         where TTaskBoxIntoIterator: TaskBoxIntoIterator<Self::TTaskBoxParam>;
 }
+
+impl <'a,
+      TScheduler,
+      T> SimpleBeginScheduleTrait<'a,
+                                  TScheduler> for T
+    where TScheduler: 'a +
+                      SchedulerTrait,
+          T: SchedulerTrait { }

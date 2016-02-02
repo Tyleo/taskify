@@ -113,10 +113,3 @@ impl <TRng> SchedulerTrait for Scheduler<TRng>
         }
     }
 }
-
-impl<'a,
-     TRng> SimpleBeginScheduleTrait<'a,
-                                    Scheduler<TRng>> for Scheduler<TRng>
-    where TRng: 'static +
-                Rng +
-                Send { }

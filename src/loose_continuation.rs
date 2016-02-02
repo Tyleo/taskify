@@ -33,15 +33,10 @@ impl <TScheduler> SchedulerTrait for LooseContinuation<TScheduler>
                                                task_boxes: TTaskBoxIntoIterator) -> Self::TScheduleMultipleReturn
         where TTaskBoxIntoIterator: 'static +
                                     TaskBoxIntoIterator<Self::TTaskBoxParam> {
-            Box::new(
-                move |scheduler: &Self::TTaskBoxParam| {
-                    scheduler.schedule_multiple(task_boxes);
-                }
-            )
-        }
+        Box::new(
+            move |scheduler: &Self::TTaskBoxParam| {
+                scheduler.schedule_multiple(task_boxes);
+            }
+        )
+    }
 }
-
-impl <'a, TScheduler> SimpleBeginScheduleTrait<'a,
-                                               LooseContinuation<TScheduler>> for LooseContinuation<TScheduler>
-    where TScheduler: 'a +
-                      SchedulerTrait { }

@@ -1,7 +1,7 @@
-use ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes;
-use ContinuationAdderTrait;
-use EndScheduleMultipleTaskBoxesOneContinuationBox;
-use EndScheduleTrait;
+use fluent::ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes;
+use fluent::ContinuationAdderTrait;
+use fluent::EndScheduleMultipleTaskBoxesOneContinuationBox;
+use fluent::EndScheduleTrait;
 use SchedulerTrait;
 use Task;
 use TaskBox;

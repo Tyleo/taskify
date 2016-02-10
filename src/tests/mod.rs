@@ -1,6 +1,6 @@
-use BeginScheduleTrait;
-use EmptyTaskAdderTrait;
-use EndScheduleTrait;
+use fluent::BeginScheduleTrait;
+use fluent::EmptyTaskAdderTrait;
+use fluent::EndScheduleTrait;
 use LooseContinuation;
 use rand::StdRng;
 use Scheduler;

@@ -1,4 +1,4 @@
-use SimpleBeginScheduleTrait;
+use fluent::SimpleBeginScheduleTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
 

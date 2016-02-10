@@ -1,7 +1,7 @@
-use BeginScheduleTrait;
-use EmptyTaskAdder;
+use fluent::BeginScheduleTrait;
+use fluent::EmptyTaskAdder;
 use SchedulerTrait;
-use SimpleBeginScheduleTrait;
+use fluent::SimpleBeginScheduleTrait;
 use std::marker::PhantomData;
 use TaskBox;
 use TaskBoxIntoIterator;

@@ -1,5 +1,5 @@
-use ContinuationAdderTrait;
-use EndScheduleTrait;
+use fluent::ContinuationAdderTrait;
+use fluent::EndScheduleTrait;
 use SchedulerTrait;
 use Task;
 use TaskBox;

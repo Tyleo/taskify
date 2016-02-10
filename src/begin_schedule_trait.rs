@@ -1,7 +1,7 @@
-use ContinuationAdderTrait;
-use EmptyTaskAdderTrait;
+use fluent::ContinuationAdderTrait;
+use fluent::EmptyTaskAdderTrait;
 use SchedulerTrait;
-use TaskAdderTrait;
+use fluent::TaskAdderTrait;
 
 pub trait BeginScheduleTrait<'a,
                              TScheduler,

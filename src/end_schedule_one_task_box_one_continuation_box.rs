@@ -1,4 +1,4 @@
-use EndScheduleTrait;
+use fluent::EndScheduleTrait;
 use Scheduler;
 use SchedulerTrait;
 use TaskBox;
@@ -31,7 +31,7 @@ impl <'a,
                                                                                TScheduler>
     where TScheduler: SchedulerTrait {
     type TEndScheduleReturn = TScheduler::TScheduleReturn;
-    
+
     fn end_schedule(self) -> Self::TEndScheduleReturn {
         let task_box = self.task_box;
         let continuation_box = self.continuation_box;

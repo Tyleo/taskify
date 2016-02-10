@@ -1,11 +1,11 @@
-use ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes;
-use ContinuationAdderMultipleTaskBoxesOneContinuationBox;
-use ContinuationAdderTrait;
-use EndScheduleMultipleTaskBoxesNoContinuations;
-use EndScheduleTrait;
+use fluent::ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes;
+use fluent::ContinuationAdderMultipleTaskBoxesOneContinuationBox;
+use fluent::ContinuationAdderTrait;
+use fluent::EndScheduleMultipleTaskBoxesNoContinuations;
+use fluent::EndScheduleTrait;
 use SchedulerTrait;
 use Task;
-use TaskAdderTrait;
+use fluent::TaskAdderTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
 

@@ -1,7 +1,7 @@
-use ContinuationAdderTrait;
+use fluent::ContinuationAdderTrait;
 use SchedulerTrait;
 use Task;
-use TaskAdderTrait;
+use fluent::TaskAdderTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
 

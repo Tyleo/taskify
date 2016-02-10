@@ -1,12 +1,12 @@
-use BeginScheduleTrait;
-use ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes;
-use ContinuationAdderMultipleTaskBoxesOneContinuationBox;
-use ContinuationAdderOneTaskBoxMultipleContinuationBoxes;
-use ContinuationAdderOneTaskBoxOneContinuationBox;
-use EmptyTaskAdder;
+use fluent::BeginScheduleTrait;
+use fluent::ContinuationAdderMultipleTaskBoxesMultipleContinuationBoxes;
+use fluent::ContinuationAdderMultipleTaskBoxesOneContinuationBox;
+use fluent::ContinuationAdderOneTaskBoxMultipleContinuationBoxes;
+use fluent::ContinuationAdderOneTaskBoxOneContinuationBox;
+use fluent::EmptyTaskAdder;
 use SchedulerTrait;
-use TaskAdderMultipleTaskBoxes;
-use TaskAdderOneTaskBox;
+use fluent::TaskAdderMultipleTaskBoxes;
+use fluent::TaskAdderOneTaskBox;
 
 pub trait SimpleBeginScheduleTrait<'a,
                                    TScheduler>
@@ -38,4 +38,3 @@ impl <'a,
         EmptyTaskAdder::new(self)
     }
 }
-

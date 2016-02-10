@@ -1,4 +1,4 @@
-use EndScheduleTrait;
+use fluent::EndScheduleTrait;
 use SchedulerTrait;
 use Task;
 use TaskBox;

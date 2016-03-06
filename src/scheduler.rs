@@ -16,11 +16,12 @@ pub struct Scheduler<TRng>
 impl <TRng> Scheduler<TRng>
     where TRng: Rng +
                 Send {
-    pub fn new(worker: Worker<TaskBox<Scheduler<TRng>>>,
-               stealers: Vec<Stealer<TaskBox<Scheduler<TRng>>>>,
-               rng : TRng) -> Scheduler<TRng> {
+    pub fn new<TStealerIterator>(worker: Worker<TaskBox<Scheduler<TRng>>>,
+                                 stealers: TStealerIterator,
+                                 rng: TRng) -> Scheduler<TRng>
+        where TStealerIterator: IntoIterator<Item = Stealer<TaskBox<Scheduler<TRng>>>> {
         Scheduler { worker: worker,
-                    stealers: stealers,
+                    stealers: stealers.into_iter().collect(),
                     rng: rng }
     }
 
@@ -28,14 +29,15 @@ impl <TRng> Scheduler<TRng>
         where TRangeIntoIterator: IntoIterator<Item = TRng> {
         let buffer_pool = BufferPool::<TaskBox<Scheduler<TRng>>>::new();
 
-        let (rng_and_worker_vec, stealers): (Vec<(TRng,
-                                                  Worker<TaskBox<Scheduler<TRng>>>)>,
+        let (rng_and_worker_vec, stealers): (Vec<(TRng, Worker<TaskBox<Scheduler<TRng>>>)>,
                                              Vec<Stealer<TaskBox<Scheduler<TRng>>>>) = {
             rngs.into_iter()
-                .map(|rng| {
-                let (worker, stealer) = buffer_pool.deque();
-                ((rng, worker), stealer)
-            }).unzip()
+                .map(
+                    |rng| {
+                        let (worker, stealer) = buffer_pool.deque();
+                        ((rng, worker), stealer)
+                    }
+                ).unzip()
         };
         let schedulers = rng_and_worker_vec.into_iter()
                                            .map(|(rng, worker)| Scheduler::new(worker, stealers.clone(), rng))
@@ -77,12 +79,15 @@ impl <TRng> Scheduler<TRng>
         while {
             match stealer.steal() {
                 Stolen::Empty => {
+                    // No tasks to steal. Stop trying for this stealer.
                     false
                 },
                 Stolen::Abort => {
+                    // Thread contention. Keep trying until the other thread yields.
                     true
                 },
                 Stolen::Data(data) => {
+                    // Successful steal. Run task and stop trying.
                     data.call_box((&self,));
                     return true;
                 },

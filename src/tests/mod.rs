@@ -13,12 +13,12 @@ use std::thread;
 #[test]
 fn it_works() {
     let num_threads = 8;
-    let num_tasks_per_thread = 50000000;
+    let num_tasks_per_thread = 500000;
 
     let rngs: Vec<_> = (0..num_threads).map(
         |i| {
             match StdRng::new() {
-                Ok(rng) =>{
+                Ok(rng) => {
                     rng
                 },
                 Err(_) => {

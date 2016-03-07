@@ -38,26 +38,23 @@ impl <'a,
 
         let decaying_continuation_boxes = DecayPtr::new(continuation_boxes);
 
-        let mut result_tasks = Vec::<TaskBox<TScheduler::TTaskBoxParam>>::new();
+        let result_tasks: Vec<_> =
+            task_boxes
+                .into_iter()
+                .map(
+                    |task_box: TaskBox<TScheduler::TTaskBoxParam>| -> TaskBox<TScheduler::TTaskBoxParam> {
+                        let decaying_continuation_boxes_clone = decaying_continuation_boxes.clone();
 
-        for task_box in task_boxes {
-            let current_decaying_continuation_boxes = decaying_continuation_boxes.clone();
-
-            let current_task = move |scheduler: &TScheduler::TTaskBoxParam| {
-                task_box.call_box((&scheduler,));
-                match current_decaying_continuation_boxes.decay() {
-                    Some(continuation_boxes) => {
-                        scheduler.schedule_multiple(continuation_boxes);
-                    },
-                    None => {
-                        // Do nothing
-                    },
-                }
-            };
-            let current_task_box = Box::new(current_task);
-
-            result_tasks.push(current_task_box);
-        }
+                        Box::new(
+                            move |scheduler: &TScheduler::TTaskBoxParam| {
+                                task_box.call_box((&scheduler,));
+                                if let Some(continuation_boxes) = decaying_continuation_boxes_clone.decay() {
+                                    scheduler.schedule_multiple(continuation_boxes);
+                                }
+                            }
+                        )
+                    }
+                ).collect();
 
         decaying_continuation_boxes.decay();
 

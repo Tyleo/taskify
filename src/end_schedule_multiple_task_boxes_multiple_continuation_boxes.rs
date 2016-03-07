@@ -37,7 +37,7 @@ impl <'a,
         let task_boxes = self.task_boxes;
         let continuation_boxes = self.continuation_boxes;
 
-        let decaying_continuation_boxes = unsafe { DecayPtr::new(continuation_boxes) };
+        let decaying_continuation_boxes = DecayPtr::new(continuation_boxes);
 
         let mut result_tasks = Vec::<TaskBox<TScheduler::TTaskBoxParam>>::new();
 
@@ -59,6 +59,8 @@ impl <'a,
 
             result_tasks.push(current_task_box);
         }
+
+        decaying_continuation_boxes.decay();
 
         self.scheduler.schedule_multiple(result_tasks)
     }

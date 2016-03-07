@@ -46,7 +46,7 @@ impl <'a,
 
             let current_task = move |scheduler: &TScheduler::TTaskBoxParam| {
                 task_box.call_box((&scheduler,));
-                match unsafe { current_decaying_continuation_box.decay() } {
+                match current_decaying_continuation_box.decay() {
                     Some(continuation_box) => {
                         scheduler.schedule(continuation_box);
                     },
@@ -59,6 +59,8 @@ impl <'a,
 
             result_tasks.push(current_task_box);
         }
+
+        decaying_continuation_box.decay();
 
         self.scheduler.schedule_multiple(result_tasks)
     }

@@ -15,29 +15,18 @@ fn it_works() {
     let num_threads = 8;
     let num_tasks_per_thread = 500000;
 
-    let rngs: Vec<_> = (0..num_threads).map(
-        |i| {
-            match StdRng::new() {
-                Ok(rng) => {
-                    rng
-                },
-                Err(_) => {
-                    panic!();
-                },
-            }
-        }).collect();
-    let schedulers = Scheduler::new_batch(rngs);
+    let schedulers = Scheduler::<StdRng>::new_batch(num_threads);
 
     let shared = Arc::new(AtomicUsize::new(0));
     for scheduler in &schedulers {
-        for i in 0..num_tasks_per_thread {
+        for _ in 0..num_tasks_per_thread {
             let clone = shared.clone();
 
             let loose_continuation =
                 LooseContinuation::<Scheduler<_>>::new()
                     .begin_schedule()
                     .add_task(
-                        move |scheduler: &Scheduler<StdRng>| {
+                        move |_: &Scheduler<StdRng>| {
                             clone.fetch_add(1, Ordering::Relaxed);
                             let mut value = 0;
                             for i in 0..1000 {

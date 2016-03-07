@@ -1,4 +1,4 @@
-use DecayPtr;
+use utilities::DecayPtr;
 use fluent::EndScheduleTrait;
 use SchedulerTrait;
 use TaskBox;

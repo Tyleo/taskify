@@ -1,5 +1,6 @@
 use deque::{ BufferPool, Stealer, Stolen, Worker };
 use rand::Rng;
+use rand::StdRng;
 use SchedulerTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
@@ -24,7 +25,7 @@ impl <TRng> Scheduler<TRng>
                     rng: rng }
     }
 
-    pub fn new_batch<TRangeIntoIterator>(rngs: TRangeIntoIterator) -> Vec<Scheduler<TRng>>
+    pub fn new_batch_from_rngs<TRangeIntoIterator>(rngs: TRangeIntoIterator) -> Vec<Scheduler<TRng>>
         where TRangeIntoIterator: IntoIterator<Item = TRng> {
         let buffer_pool = BufferPool::<TaskBox<Scheduler<TRng>>>::new();
 
@@ -93,6 +94,19 @@ impl <TRng> Scheduler<TRng>
             }
         } { }
         false
+    }
+}
+
+impl Scheduler<StdRng> {
+    pub fn new_batch(num_schedulers: usize) -> Vec<Scheduler<StdRng>> {
+        let rngs =
+            (0..num_schedulers)
+                .map(
+                    |_| {
+                        StdRng::new().unwrap()
+                    }
+                );
+        Self::new_batch_from_rngs(rngs)
     }
 }
 

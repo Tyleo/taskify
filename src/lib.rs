@@ -20,8 +20,6 @@ mod continuation_adder_one_task_box_one_continuation_box;
 
 mod continuation_adder_trait;
 
-mod decay_ptr;
-
 mod empty_task_adder;
 
 mod empty_task_adder_trait;
@@ -60,8 +58,8 @@ mod task_box;
 
 mod task_box_into_iterator;
 
+mod utilities;
 
-pub use decay_ptr::DecayPtr;
 
 pub use loose_continuation::LooseContinuation;
 

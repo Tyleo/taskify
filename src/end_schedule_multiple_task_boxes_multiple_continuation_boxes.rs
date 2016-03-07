@@ -1,6 +1,5 @@
 use DecayPtr;
 use fluent::EndScheduleTrait;
-use Scheduler;
 use SchedulerTrait;
 use TaskBox;
 
@@ -42,11 +41,11 @@ impl <'a,
         let mut result_tasks = Vec::<TaskBox<TScheduler::TTaskBoxParam>>::new();
 
         for task_box in task_boxes {
-            let current_decaying_continuation_boxes = unsafe { decaying_continuation_boxes.clone() };
+            let current_decaying_continuation_boxes = decaying_continuation_boxes.clone();
 
             let current_task = move |scheduler: &TScheduler::TTaskBoxParam| {
                 task_box.call_box((&scheduler,));
-                match unsafe { current_decaying_continuation_boxes.decay() } {
+                match current_decaying_continuation_boxes.decay() {
                     Some(continuation_boxes) => {
                         scheduler.schedule_multiple(continuation_boxes);
                     },

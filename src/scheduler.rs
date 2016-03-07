@@ -1,7 +1,6 @@
 use deque::{ BufferPool, Stealer, Stolen, Worker };
 use rand::Rng;
 use SchedulerTrait;
-use fluent::SimpleBeginScheduleTrait;
 use TaskBox;
 use TaskBoxIntoIterator;
 

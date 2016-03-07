@@ -68,7 +68,7 @@ impl<T> DecayPtr<T> {
     }
 
     fn inner_raw(self) -> *mut DecayInner<T> {
-        unsafe { *self._ptr }
+        *self._ptr
     }
 
     pub fn clone(&self) ->DecayPtr<T> {

@@ -1,10 +1,7 @@
 #![feature(alloc)]
-#![feature(coerce_unsized)]
 #![feature(fnbox)]
 #![feature(heap_api)]
 #![feature(shared)]
-#![feature(unsize)]
-
 
 extern crate alloc;
 extern crate deque;

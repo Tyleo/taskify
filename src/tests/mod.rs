@@ -1,5 +1,3 @@
-mod fluent_tests;
-
 use fluent::BeginScheduleTrait;
 use fluent::EmptyTaskAdderTrait;
 use fluent::EndScheduleTrait;
@@ -30,36 +28,36 @@ fn it_works() {
                     .add_task(
                         move |_: &Scheduler<StdRng>| {
                             clone.fetch_add(1, Ordering::Relaxed);
-                            let mut value = 0;
+                            let mut _value = 0;
                             for i in 0..1000 {
-                                value = i + 5;
+                                _value = i + 5;
                             }
                         }
                     )
                     .end_schedule();
 
-            // scheduler.schedule(loose_continuation);
+            scheduler.schedule(loose_continuation);
         }
         break;
     }
-    //
-    // let join_handles: Vec<_> =
-    //     schedulers
-    //         .into_iter()
-    //         .map(
-    //             |mut scheduler| {
-    //                 thread::spawn(
-    //                     move || {
-    //                         scheduler.run();
-    //                     }
-    //                 )
-    //             }
-    //         ).collect();
-    //
-    // for join_handle in join_handles {
-    //     join_handle.join();
-    // }
-    //
-    // let shared_as_usize: usize = shared.load(Ordering::Relaxed);
-    // println!("{0}", shared_as_usize);
+
+    let join_handles: Vec<_> =
+        schedulers
+            .into_iter()
+            .map(
+                |mut scheduler| {
+                    thread::spawn(
+                        move || {
+                            scheduler.run();
+                        }
+                    )
+                }
+            ).collect();
+
+    for join_handle in join_handles {
+        join_handle.join();
+    }
+
+    let shared_as_usize: usize = shared.load(Ordering::Relaxed);
+    println!("{0}", shared_as_usize);
 }

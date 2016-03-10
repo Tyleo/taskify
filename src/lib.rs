@@ -9,19 +9,21 @@ extern crate rand;
 
 pub mod fluent;
 
-mod loose_continuation;
+// An error with the compiler requires all these modules be public now.
 
-mod scheduler;
+pub mod loose_continuation;
 
-mod scheduler_trait;
+pub mod scheduler;
 
-mod task;
+pub mod scheduler_trait;
 
-mod task_box;
+pub mod task;
 
-mod task_box_into_iterator;
+pub mod task_box;
 
-mod utilities;
+pub mod task_box_into_iterator;
+
+pub mod utilities;
 
 pub use loose_continuation::LooseContinuation;
 
@@ -34,7 +36,6 @@ pub use task::Task;
 pub use task_box::TaskBox;
 
 pub use task_box_into_iterator::TaskBoxIntoIterator;
-
 
 #[cfg(test)]
 mod tests;

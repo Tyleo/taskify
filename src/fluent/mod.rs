@@ -1,40 +1,42 @@
-mod begin_schedule_trait;
+// An error with the compiler requires all these modules be public now.
 
-mod continuation_adder_multiple_task_boxes_multiple_continuation_boxes;
+pub mod begin_schedule_trait;
 
-mod continuation_adder_multiple_task_boxes_one_continuation_box;
+pub mod continuation_adder_multiple_task_boxes_multiple_continuation_boxes;
 
-mod continuation_adder_one_task_box_multiple_continuation_boxes;
+pub mod continuation_adder_multiple_task_boxes_one_continuation_box;
 
-mod continuation_adder_one_task_box_one_continuation_box;
+pub mod continuation_adder_one_task_box_multiple_continuation_boxes;
 
-mod continuation_adder_trait;
+pub mod continuation_adder_one_task_box_one_continuation_box;
 
-mod empty_task_adder;
+pub mod continuation_adder_trait;
 
-mod empty_task_adder_trait;
+pub mod empty_task_adder;
 
-mod end_schedule_multiple_task_boxes_multiple_continuation_boxes;
+pub mod empty_task_adder_trait;
 
-mod end_schedule_multiple_task_boxes_no_continuations;
+pub mod end_schedule_multiple_task_boxes_multiple_continuation_boxes;
 
-mod end_schedule_multiple_task_boxes_one_continuation_box;
+pub mod end_schedule_multiple_task_boxes_no_continuations;
 
-mod end_schedule_one_task_box_multiple_continuation_boxes;
+pub mod end_schedule_multiple_task_boxes_one_continuation_box;
 
-mod end_schedule_one_task_box_no_continuations;
+pub mod end_schedule_one_task_box_multiple_continuation_boxes;
 
-mod end_schedule_one_task_box_one_continuation_box;
+pub mod end_schedule_one_task_box_no_continuations;
 
-mod end_schedule_trait;
+pub mod end_schedule_one_task_box_one_continuation_box;
 
-mod simple_begin_schedule_trait;
+pub mod end_schedule_trait;
 
-mod task_adder_trait;
+pub mod simple_begin_schedule_trait;
 
-mod task_adder_multiple_task_boxes;
+pub mod task_adder_trait;
 
-mod task_adder_one_task_box;
+pub mod task_adder_multiple_task_boxes;
+
+pub mod task_adder_one_task_box;
 
 pub use fluent::begin_schedule_trait::BeginScheduleTrait;
 

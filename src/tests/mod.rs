@@ -55,7 +55,7 @@ fn it_works() {
             ).collect();
 
     for join_handle in join_handles {
-        join_handle.join();
+        join_handle.join().unwrap();
     }
 
     let shared_as_usize: usize = shared.load(Ordering::Relaxed);

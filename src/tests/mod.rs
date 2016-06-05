@@ -10,6 +10,8 @@ use std::sync::atomic::AtomicUsize;
 use std::sync::atomic::Ordering;
 use std::thread;
 
+mod fluent_tests;
+
 #[test]
 fn it_works() {
     let num_threads = 8;
